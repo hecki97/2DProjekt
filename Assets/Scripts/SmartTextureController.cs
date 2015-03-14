@@ -90,7 +90,7 @@ public class SmartTextureController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Debug.DrawLine(transform.position, transform.position + new Vector3(0, .75f, 0));
-        Debug.DrawLine(transform.position, transform.position + new Vector3(0, -.75f, 0));
+		Debug.DrawLine(transform.position, transform.position + new Vector3(0, -.75f, 0));
         Debug.DrawLine(transform.position, transform.position + new Vector3(.75f, 0, 0));
         Debug.DrawLine(transform.position, transform.position + new Vector3(-.75f, 0, 0));
 	}

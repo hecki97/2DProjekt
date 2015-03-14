@@ -71,12 +71,10 @@ public class BoardManager : MonoBehaviour
             {
                 for (int y = -1; y < rows + 1; y++)
                 {
-                    GameObject instance = new GameObject();
-
                     if (x == -1 || x == columns || y == -1 || y == rows)
                     {
                         //instance = Instantiate(outerWallTiles[Random.Range(0, outerWallTiles.Length)], new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                        InstantiateGameObject(outerWallTiles, "OuterWall", new Vector3(x, y, 0f));
+                        	InstantiateGameObject(outerWallTiles, "OuterWall", new Vector3(x, y, 0f));
                     }
                     else if (x == 0 || x == columns - 1f || y == 0 || y == rows - 1f)
                     {
@@ -85,7 +83,7 @@ public class BoardManager : MonoBehaviour
                     }
 
                     //GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                    instance.transform.SetParent(boardHolder);
+                    //instance.transform.SetParent(boardHolder);
                 }
             }
         }
