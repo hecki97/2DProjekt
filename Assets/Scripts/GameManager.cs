@@ -8,12 +8,15 @@ public class GameManager : MonoBehaviour
 {
 	public float levelStartDelay = 2f;
 	public float turnDelay = 0.1f;
+
+	//Player Stats
+	public int playerMaxFoodPoints = 100;
 	public int playerFoodPoints = 100;
-
-    //
     public int playerCoinsCount = 0;
-    public GameMode gameMode;
+	public int playerHealthCount = 3;
+	public int playerDamageCount = 1;
 
+	public GameMode gameMode;
 	public static GameManager instance = null;
 	[HideInInspector]
 	public bool
@@ -30,6 +33,10 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
 	void Awake ()
 	{
+		//#if UNITY_IOS || UNITY_IPHONE
+		Application.targetFrameRate = 60;
+		//#endif
+
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
@@ -54,7 +61,7 @@ public class GameManager : MonoBehaviour
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
 
         //Test
-        if (Application.loadedLevel == 0)
+        if (Application.loadedLevel == 1)
             gameMode = GameMode.TwoD;
         else
             gameMode = GameMode.ThreeD;

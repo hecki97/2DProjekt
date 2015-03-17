@@ -35,9 +35,8 @@ public class Player : MovingObject {
     public Text coinText;
     private int coins;
 
-    //private Vector2 touchOrigin = -Vector2.one;
+    private Vector2 touchOrigin = -Vector2.one;
 
-	// Use this for initialization
 	void Start () {
         animator = GetComponent<Animator>();
         food = GameManager.instance.playerFoodPoints;
@@ -70,6 +69,28 @@ public class Player : MovingObject {
 
         if (horizontal != 0)
             vertical = 0;
+
+		if (Input.touchCount > 0) {
+
+			Touch touch = Input.touches[0];
+
+			if (touch.phase == TouchPhase.Began)
+				touchOrigin = touch.position;
+
+
+			if (touch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
+			{
+				Vector2 touchEnd = touch.position;
+				float x = touchEnd.x - touchOrigin.x;
+				float y = touchEnd.y - touchOrigin.y;
+				touchOrigin.x = -1;
+
+				if (Mathf.Abs(x) > Mathf.Abs(y))
+					horizontal = x > 0 ? 1 : -1;
+				else
+					vertical = y > 0 ? 1 : -1;
+			}
+		}
 
         //Test!!
         if (GameManager.instance.gameMode == GameMode.TwoD)
@@ -155,7 +176,7 @@ public class Player : MovingObject {
 
     IEnumerator SetDirection(Direction _dir)
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.25f);
         direction = _dir;
     }
 
