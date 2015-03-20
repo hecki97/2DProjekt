@@ -23,20 +23,20 @@ public class GameManager : MonoBehaviour
 		playersTurn = true;
 
 	private Text levelText;
-	private GameObject levelImage;
+	private Image levelImage;
 	private BoardManager boardScript;
 	private int level = 1;
 	private List<Enemy> enemies;
 	private bool enemiesMoving;
 	private bool doingSetup = true;
+	private bool sceneStarting = true;
+	public float fadeSpeed = 1.5f;   
+
+	public float delay = .25f;
 
 	// Use this for initialization
 	void Awake ()
 	{
-		//#if UNITY_IOS || UNITY_IPHONE
-		Application.targetFrameRate = 60;
-		//#endif
-
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
@@ -57,19 +57,26 @@ public class GameManager : MonoBehaviour
 	void InitGame ()
 	{
 		doingSetup = true;
-		levelImage = GameObject.Find ("LevelImage");
+		sceneStarting = true;
+		levelImage = GameObject.Find ("LevelImage").GetComponent<Image>();
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
+
+		//#if UNITY_IOS || UNITY_IPHONE
+		Application.targetFrameRate = 60;
+		//#endif
 
         //Test
         if (Application.loadedLevel == 1)
             gameMode = GameMode.TwoD;
-        else
+        else if (Application.loadedLevel == 2)
             gameMode = GameMode.ThreeD;
 
+		if (sceneStarting)
+			StartScene ();
 
 		levelText.text = "Level" + level;
-		levelImage.SetActive (true);
-		Invoke ("HideLevelImage", levelStartDelay);
+		levelImage.gameObject.SetActive (true);
+		//Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear();
 		boardScript.SetupScene (level);
@@ -77,8 +84,24 @@ public class GameManager : MonoBehaviour
 
 	void HideLevelImage ()
 	{
-		levelImage.SetActive (false);
+		levelImage.gameObject.SetActive (false);
 		doingSetup = false;
+	}
+
+	void StartScene ()
+	{
+		FadeToClear();
+		if(levelImage.color.a <= 0.05f)
+		{
+			levelImage.color = Color.clear;
+			levelImage.enabled = false;
+
+			sceneStarting = false;
+		}
+	}
+
+	void FadeToClear() {
+		levelImage.color = Color.Lerp(levelImage.color, Color.clear, fadeSpeed * Time.deltaTime);
 	}
 
 	// Update is called once per frame
@@ -103,7 +126,7 @@ public class GameManager : MonoBehaviour
 	public void GameOver ()
 	{
 		levelText.text = "After " + level + " levels, you died.";
-		levelImage.SetActive (true);
+		levelImage.gameObject.SetActive (true);
 		enabled = false;
 	}
 

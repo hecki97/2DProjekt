@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum ItemTypes {Food, Exit};
 public class Item : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+	public AudioClip[] pickupSounds;
+	public int pointsPerItemMin;
+	public int pointsPerItemMax;
+	public ItemTypes itemType;
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	void OnTriggerEnter2D(Collider2D other) {
+		SoundManager.instance.RandomizeSfx (pickupSounds);
+//		other.SendMessage ("OnPickup", itemType, Random.Range (pointsPerItemMin, pointsPerItemMax));
 	}
 }

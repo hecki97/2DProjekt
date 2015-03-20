@@ -49,50 +49,35 @@ public class BoardManager : MonoBehaviour
 		boardHolder = new GameObject ("Board").transform;
 
         //Test!!
-        if (GameManager.instance.gameMode == GameMode.TwoD)
-        {
-            for (int x = -1; x < columns + 1; x++)
-            {
-                for (int y = -1; y < rows + 1; y++)
-                {
-                    GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
+        if (GameManager.instance.gameMode == GameMode.TwoD) {
+			for (int x = -1; x < columns + 1; x++) {
+				for (int y = -1; y < rows + 1; y++) {
+					GameObject toInstantiate = floorTiles [Random.Range (0, floorTiles.Length)];
 
-                    if (x == -1 || x == columns || y == -1 || y == rows)
-                        toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
+					if (x == -1 || x == columns || y == -1 || y == rows)
+						toInstantiate = outerWallTiles [Random.Range (0, outerWallTiles.Length)];
 
-                    GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.Euler(new Vector3(90f, 180f, 0f))) as GameObject;
-                    instance.transform.SetParent(boardHolder);
-                }
-            }
-        }
-        else
-        {
-            for (int x = -1; x < columns + 1; x++)
-            {
-                for (int y = -1; y < rows + 1; y++)
-                {
-                    if (x == -1 || x == columns || y == -1 || y == rows)
-                    {
-                        //instance = Instantiate(outerWallTiles[Random.Range(0, outerWallTiles.Length)], new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                        	InstantiateGameObject(outerWallTiles, "OuterWall", new Vector3(x, y, 0f));
-                    }
-                    else if (x == 0 || x == columns - 1f || y == 0 || y == rows - 1f)
-                    {
-                        InstantiateGameObject(floorTiles, "FloorSprite", new Vector3(x, y, 0.5f));
-                        InstantiateGameObject(floorTiles, "FloorSprite", new Vector3(x, y, -0.5f), new Vector3(0f, 180f, 180f));
-                    }
+					GameObject instance = Instantiate (toInstantiate, new Vector3 (x, y, 0f), Quaternion.identity) as GameObject;
+					instance.transform.SetParent (boardHolder);
+				}
+			}
+		} else {
+			for (int x = -1; x < columns + 1; x++) {
+				for (int y = -1; y < rows + 1; y++) {
+					if (x == -1 || x == columns || y == -1 || y == rows)
+						InstantiateGameObject (outerWallTiles, "OuterWall", new Vector3 (x, y, 0f));
+					else if (x == 0 || x == columns - 1f || y == 0 || y == rows - 1f) {
+						InstantiateGameObject (floorTiles, "FloorSprite", new Vector3 (x, y, 0.5f));
+						InstantiateGameObject (floorTiles, "FloorSprite", new Vector3 (x, y, -0.5f), new Vector3 (0f, 180f, 180f));
+					}
+				}
+			}
 
-                    //GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                    //instance.transform.SetParent(boardHolder);
-                }
-            }
-        }
-
-        for (int i = 0; i < gridPositions.Count; i++)
-        {
-            InstantiateGameObject(floorTiles, "FloorSprite", new Vector3(gridPositions[i].x, gridPositions[i].y, 0.5f));
-            InstantiateGameObject(floorTiles, "FloorSprite", new Vector3(gridPositions[i].x, gridPositions[i].y, -0.5f), new Vector3(0f, 180f, 180f));
-        }
+			for (int i = 0; i < gridPositions.Count; i++) {
+				InstantiateGameObject (floorTiles, "FloorSprite", new Vector3 (gridPositions [i].x, gridPositions [i].y, 0.5f));
+				InstantiateGameObject (floorTiles, "FloorSprite", new Vector3 (gridPositions [i].x, gridPositions [i].y, -0.5f), new Vector3 (0f, 180f, 180f));
+			}
+		}
 	}
 
     void InstantiateGameObject(GameObject[] gameObject, string name ,Vector3 position)

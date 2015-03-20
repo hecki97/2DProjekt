@@ -242,6 +242,19 @@ public class Player : MovingObject {
         }
     }
 
+	public void OnPickup(ItemTypes type, int pointsPerItem) {
+		switch (type) {
+			case ItemTypes.Exit:
+				Invoke("Restart", restartLevelDelay);
+				enabled = false;
+				break;
+			case ItemTypes.Food:
+				food += pointsPerItem;
+				foodText.text = "Food: " + food + " +" + pointsPerItem;
+				break;
+		}
+	}
+
     private void Restart()
     {
         Application.LoadLevel(Application.loadedLevel);
