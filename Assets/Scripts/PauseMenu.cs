@@ -22,7 +22,6 @@ public class PauseMenu : MonoBehaviour
 	{
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			TriggerPauseScreen ();
-            blur.enabled = !blur.enabled;
 		}
 	}
 
@@ -46,14 +45,10 @@ public class PauseMenu : MonoBehaviour
 	void TriggerPauseScreen ()
 	{
 		isPaused = !isPaused;
+		blur.enabled = !blur.enabled;
 		anim.SetBool ("isPaused", isPaused);
 		anim.SetTrigger ("triggerPauseMenu");
-
-		/*
-		if (isPaused) {
-			Time.timeScale = 0;
-		} else
-			Time.timeScale = 1;
-		*/
+		Time.timeScale = isPaused ? 0 : 1;
+		
 	}
 }

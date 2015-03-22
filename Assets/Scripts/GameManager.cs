@@ -71,12 +71,12 @@ public class GameManager : MonoBehaviour
         else if (Application.loadedLevel == 2)
             gameMode = GameMode.ThreeD;
 
-		if (sceneStarting)
-			StartScene ();
+		//if (sceneStarting)
+		//	StartScene ();
 
 		levelText.text = "Level" + level;
 		levelImage.gameObject.SetActive (true);
-		//Invoke ("HideLevelImage", levelStartDelay);
+		Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear();
 		boardScript.SetupScene (level);
@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
 		doingSetup = false;
 	}
 
+	/*
 	void StartScene ()
 	{
 		FadeToClear();
@@ -103,6 +104,7 @@ public class GameManager : MonoBehaviour
 	void FadeToClear() {
 		levelImage.color = Color.Lerp(levelImage.color, Color.clear, fadeSpeed * Time.deltaTime);
 	}
+	*/
 
 	// Update is called once per frame
 	void Update ()
