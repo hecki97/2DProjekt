@@ -2,45 +2,79 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Xml.Serialization;
+using System.IO;
+using UnityStandardAssets.ImageEffects;
 
+public enum MenuInstance { MainMenu, PauseMenu, OptionsMenu, AudioMenu, GraphicsMenu };
 public enum GameMode { TwoD, ThreeD };
 public class GameManager : MonoBehaviour
 {
-	public float levelStartDelay = 2f;
-	public float turnDelay = 0.1f;
+    public static GameManager instance = null;
+    private BoardManager boardScript;
+    private List<Enemy> enemies;
+    private bool enemiesMoving;
+    private bool doingSetup = true;
 
-	//Player Stats
-	public int playerMaxFoodPoints = 100;
-	public int playerFoodPoints = 100;
-    public int playerCoinsCount = 0;
-	public int playerHealthCount = 3;
-	public int playerDamageCount = 1;
+    //SecretMode!
+    public float duration;
+    public bool secretModeActive = false;
 
-	public GameMode gameMode;
-	public static GameManager instance = null;
-	[HideInInspector]
-	public bool
-		playersTurn = true;
+    private BloomOptimized bloom;
+    private Color32 colorStart;
+    private Color32 colorEnd;
 
-	private Text levelText;
-	private Image levelImage;
-	private BoardManager boardScript;
-	private int level = 1;
-	private List<Enemy> enemies;
-	private bool enemiesMoving;
-	private bool doingSetup = true;
-	private bool sceneStarting = true;
-	public float fadeSpeed = 1.5f;   
+    //      Score
+    public float time = 0f;
 
-	public float delay = .25f;
+    //      Game Settings
+    public GameMode gameMode;
+    public Difficulty difficulty = Difficulty.Normal;
+    public bool isPaused = false;
+    public int level = 1;
+    
+    public float turnDelay = 0.1f;
+    [HideInInspector] public bool playersTurn = true;
+
+    //      UI
+    public MenuInstance menu = MenuInstance.PauseMenu;
+    public float levelStartDelay = 2f;
+
+    private Text levelText;
+    private Image levelImage;
+
+    //      Level Color
+    public TextAsset levelColorXMLFile;
+
+    public Material mat;
+    private List<LevelColorData> colors;
+    private Color32 levelColor;
+
+    //       PlayerStats
+    public TextAsset playerStatsXMLFile;
+
+    private List<PlayerStatsData> playerStats;
+    [HideInInspector] public int foodPoints;
+    [HideInInspector] public int maxFoodPoints;
+     public int coinsCount;
+    [HideInInspector] public int healthPoints;
+    [HideInInspector] public int maxHealthPoints;
+//    private float damageCount;
 
 	// Use this for initialization
 	void Awake ()
 	{
-		if (instance == null)
-			instance = this;
-		else if (instance != this)
-			Destroy (gameObject);
+        if (instance == null)
+        {
+            instance = this;
+            XMLFileHandler.DeserializeXMLFile<LevelColorData>(levelColorXMLFile, out colors);
+            XMLFileHandler.DeserializeXMLFile<PlayerStatsData>(playerStatsXMLFile, out playerStats);
+            LoadDefaultPlayerStats();
+        }
+        else if (instance != this)
+            Destroy(gameObject);
+
+        SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
 
 		DontDestroyOnLoad (gameObject);
 		enemies = new List<Enemy>();
@@ -48,16 +82,52 @@ public class GameManager : MonoBehaviour
 		InitGame ();
 	}
 
-	void OnLevelWasLoaded (int index)
-	{
-        level++;
-		InitGame ();
-	}
+    void OnDisable()
+    {
+        SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
+    }
+
+    private void SecretEventHandler_OnTrigger()
+    {
+        secretModeActive = !secretModeActive;
+
+        if (secretModeActive)
+            SoundManager.instance.musicSource.clip = SoundManager.instance.secretBGM;
+        else
+        {
+            SoundManager.instance.musicSource.clip = SoundManager.instance.mainBGM;
+            mat.color = levelColor;
+        }
+        bloom.enabled = secretModeActive;
+        SoundManager.instance.musicSource.Play();
+    }
+
+    public void LoadDefaultPlayerStats()
+    {
+        for (int i = 0; i < playerStats.Count; i++)
+        {
+            if (playerStats[i].difficulty == difficulty)
+            {
+                foodPoints = playerStats[i].GetFoodPoints();
+                maxFoodPoints = playerStats[i].GetMaxFoodPoints();
+                healthPoints = playerStats[i].GetHealthPoints();
+                maxHealthPoints = playerStats[i].GetMaxHealthPoints();
+                coinsCount = playerStats[i].playerCoinsCount;
+//                damageCount = playerStats[i].GetDamageCount();
+            }
+        }
+    }
+
+    void OnLevelWasLoaded()
+    {
+        InitGame();
+    }
 
 	void InitGame ()
 	{
+        if (GameObject.Find("LevelImage") == null && GameObject.Find("LevelText") == null) return;
+
 		doingSetup = true;
-		sceneStarting = true;
 		levelImage = GameObject.Find ("LevelImage").GetComponent<Image>();
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
 
@@ -65,21 +135,28 @@ public class GameManager : MonoBehaviour
 		Application.targetFrameRate = 60;
 		//#endif
 
+        if (Application.loadedLevel != 0)
+        {
+            bloom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BloomOptimized>();
+            bloom.enabled = secretModeActive;
+        }
+        colorStart = ColorUtil.getRandomColor();
+        colorEnd = ColorUtil.getRandomColor();
+        levelColor = colors[Random.Range(0, colors.Count)].GetColor32();
+        mat.color = levelColor;
+
         //Test
         if (Application.loadedLevel == 1)
             gameMode = GameMode.TwoD;
         else if (Application.loadedLevel == 2)
             gameMode = GameMode.ThreeD;
 
-		//if (sceneStarting)
-		//	StartScene ();
-
-		levelText.text = "Level" + level;
+		levelText.text = "Level " + level;
 		levelImage.gameObject.SetActive (true);
 		Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear();
-		boardScript.SetupScene (level);
+//		boardScript.SetupScene (level);
 	}
 
 	void HideLevelImage ()
@@ -88,28 +165,24 @@ public class GameManager : MonoBehaviour
 		doingSetup = false;
 	}
 
-	/*
-	void StartScene ()
-	{
-		FadeToClear();
-		if(levelImage.color.a <= 0.05f)
-		{
-			levelImage.color = Color.clear;
-			levelImage.enabled = false;
-
-			sceneStarting = false;
-		}
-	}
-
-	void FadeToClear() {
-		levelImage.color = Color.Lerp(levelImage.color, Color.clear, fadeSpeed * Time.deltaTime);
-	}
-	*/
+    public void GetRandomLvlColor()
+    {
+        mat.color = colors[Random.Range(0, colors.Count)].GetColor32();
+    }
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (playersTurn || enemiesMoving || doingSetup)
+        if (secretModeActive)
+        {
+            float lerp = Mathf.PingPong(Time.time, duration) / duration;
+            mat.color = Color.Lerp(colorStart, colorEnd, lerp);
+        }
+
+        if (!isPaused && Application.loadedLevel != 0 && !doingSetup)
+            time += Time.deltaTime;
+
+		if (playersTurn || enemiesMoving || doingSetup || isPaused)
 			return;
 
 		StartCoroutine (MoveEnemies ());

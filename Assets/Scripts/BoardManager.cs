@@ -20,7 +20,6 @@ public class BoardManager : MonoBehaviour
 	public int columns = 3;
 	public int rows = 3;
 	public Count wallCount = new Count (18, 27);
-	//public Count coinCount = new Count (9, 18);
     public Count coinCount = new Count(9, 9);
     public Count foodCount = new Count(1, 5);
     public GameObject exit;
@@ -32,21 +31,30 @@ public class BoardManager : MonoBehaviour
     public GameObject[] foodTiles;
 
 	private Transform boardHolder;
+    private Transform dungeonBoard;
+
 	private List<Vector3> gridPositions = new List<Vector3> ();
+    private List<Vector3> cornerPositions = new List<Vector3>();
 
 	void InitialiseList ()
 	{
 		gridPositions.Clear ();
+        cornerPositions.Clear();
 		for (int x = 1; x < columns - 1; x++) {
 			for (int y = 1; y < rows - 1; y++) {
-				gridPositions.Add (new Vector3 (x, y, 0f));
+                gridPositions.Add(new Vector3(x, y, 0f));
 			}
 		}
+        cornerPositions.Add(new Vector3(0f, columns - 1, 0f));
+        cornerPositions.Add(new Vector3(rows - 1, columns - 1, 0f));
+        cornerPositions.Add(new Vector3(rows - 1, 0f, 0f));
 	}
 
 	void BoardSetup ()
 	{
 		boardHolder = new GameObject ("Board").transform;
+        dungeonBoard = new GameObject("DungeonBoard").transform;
+        dungeonBoard.SetParent(boardHolder);
 
         //Test!!
         if (GameManager.instance.gameMode == GameMode.TwoD) {
@@ -58,7 +66,8 @@ public class BoardManager : MonoBehaviour
 						toInstantiate = outerWallTiles [Random.Range (0, outerWallTiles.Length)];
 
 					GameObject instance = Instantiate (toInstantiate, new Vector3 (x, y, 0f), Quaternion.identity) as GameObject;
-					instance.transform.SetParent (boardHolder);
+                    instance.transform.SetParent(dungeonBoard);
+					//instance.transform.SetParent (boardHolder);
 				}
 			}
 		} else {
@@ -85,7 +94,8 @@ public class BoardManager : MonoBehaviour
         int i = Random.Range(0, gameObject.Length);
         GameObject instance = (GameObject) Instantiate(gameObject[i], position, Quaternion.identity);
         instance.name = string.Format("{0}_({1}, {2})", gameObject[i].name, position.x, position.y);
-        instance.transform.SetParent(boardHolder);
+        instance.transform.SetParent(dungeonBoard);
+        //instance.transform.SetParent(boardHolder);
     }
 
     void InstantiateGameObject(GameObject[] gameObject, string name, Vector3 position, Vector3 rotation)
@@ -94,7 +104,8 @@ public class BoardManager : MonoBehaviour
         int i = Random.Range(0, gameObject.Length);
         instance = (GameObject)Instantiate(gameObject[i], position, Quaternion.Euler(rotation));
         instance.name = string.Format("{0}_({1}, {2})", gameObject[i].name, position.x, position.y);
-        instance.transform.SetParent(boardHolder);
+        instance.transform.SetParent(dungeonBoard);
+        //instance.transform.SetParent(boardHolder);
     }
 
 	Vector3 RandomPosition ()
@@ -114,6 +125,7 @@ public class BoardManager : MonoBehaviour
             GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
             GameObject go = (GameObject) Instantiate (tileChoice, randomPosition, Quaternion.identity);
             go.name = string.Format("{0}_({1}, {2})", tileChoice.name, randomPosition.x, randomPosition.y);
+            go.transform.SetParent(boardHolder);
 		}
 	}
 
@@ -130,6 +142,12 @@ public class BoardManager : MonoBehaviour
         LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum);
 		int enemyCount = (int)Mathf.Log (level, 2f);
 		LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
-		Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
+        Instantiate(exit, cornerPositions[Random.Range(0, cornerPositions.Count)], Quaternion.identity);
+        //Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
 	}
+
+    void Start()
+    {
+        SetupScene(0);
+    }
 }

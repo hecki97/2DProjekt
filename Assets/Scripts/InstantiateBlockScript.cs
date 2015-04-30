@@ -13,8 +13,8 @@ public class InstantiateBlockScript : MonoBehaviour {
 	}
 
 	void Start() {
-		Invoke ("Lerp", GameManager.instance.delay);
-		GameManager.instance.delay += .25f; 
+		//Invoke ("Lerp", GameManager.instance.delay);
+		//GameManager.instance.delay += .25f; 
 	}
 
 	// Update is called once per frame

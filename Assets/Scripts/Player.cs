@@ -2,65 +2,59 @@
 using System.Collections;
 using UnityEngine.UI;
 
+public enum Direction { Nord, South, West, East };
 public class Player : MovingObject {
 
-    public float restartLevelDelay = 1f;
     public int pointsPerFood = 10;
-    //public int pointsPerSoda = 20;
     public int pointsPerPizza = 20;
     public int wallDamage = 1;
-    public Text foodText;
     public AudioClip moveSound1;
     public AudioClip moveSound2;
     public AudioClip eatSound1;
     public AudioClip eatSound2;
-    public AudioClip coinPickupSound1;
-    public AudioClip coinPickupSound2;
-    //public AudioClip drinkSound1;
-    //public AudioClip drinkSound2;
+    public AudioClip drinkSound1;
+    public AudioClip drinkSound2;
     public AudioClip gameOverSound;
 
-    public enum Direction { Nord, South, West, East };
     public Direction direction;
 
     private Vector3 endPos;
     private bool isLerping = false;
     private float timeStartedLerping;
-    
+
     private Transform cam;
-
-    private Animator animator;
-    private int food;
-
-    public Text coinText;
-    private int coins;
 
     private Vector2 touchOrigin = -Vector2.one;
 
-	void Start () {
-        animator = GetComponent<Animator>();
-        food = GameManager.instance.playerFoodPoints;
-        //
+	protected override void Start ()
+    {
         direction = Direction.Nord;
         if (GameManager.instance.gameMode == GameMode.ThreeD)
              cam = GameObject.Find("Camera").transform;
 
-        coins = GameManager.instance.playerCoinsCount;
-        coinText.text = "C x " + coins;
-        foodText.text = "Food: " + food;
+        ItemGenericCollider.OnPickup += ItemGenericCollider_OnPickup;
+
         base.Start();
 	}
 
-    private void OnDisable()
+    void OnDisable()
     {
-        GameManager.instance.playerFoodPoints = food;
-        GameManager.instance.playerCoinsCount = coins;
+        ItemGenericCollider.OnPickup -= ItemGenericCollider_OnPickup;
+    }
+
+    void ItemGenericCollider_OnPickup(ItemType type)
+    {
+        switch (type)
+        {
+            case ItemType.Food:
+                SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
+                break;
+        }
     }
 
 	// Update is called once per frame
 	void Update () {
         if (!GameManager.instance.playersTurn) return;
-
         int horizontal = 0;
         int vertical = 0;
 
@@ -100,9 +94,8 @@ public class Player : MovingObject {
         }
         else
         {
-            if (horizontal != 0 || vertical != 0 && !isLerping)
+            if (horizontal != 0 || vertical != 0 && !isLerping && !GameManager.instance.isPaused)
             {
-                //AttemptMove<Wall>(horizontal, vertical);
                 switch (direction)
                 {
                     case Direction.Nord:
@@ -158,7 +151,7 @@ public class Player : MovingObject {
                         if (vertical != 0)
                             AttemptMove<Wall>(vertical, 0);
                         break;
-                }   
+                }
             }
         }
 
@@ -189,13 +182,14 @@ public class Player : MovingObject {
 
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
-        food--;
-        foodText.text = "Food: " + food;
         base.AttemptMove<T>(xDir, yDir);
 
-        //RaycastHit2D hit;
-        //if (Move(xDir, yDir, out hit))
-        //    SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+        RaycastHit2D hit;
+        if (Move(xDir, yDir, out hit))
+        {
+            SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+            GameManager.instance.foodPoints--;
+        }
 
         CheckIfGameOver();
         GameManager.instance.playersTurn = false;
@@ -212,65 +206,16 @@ public class Player : MovingObject {
         Debug.Log("Hit!");
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Exit")
-        {
-            Invoke("Restart", restartLevelDelay);
-            enabled = false;
-        }
-        else if (other.tag == "Food")
-        {
-            food += pointsPerFood;
-            foodText.text = "Food: " + food + " +" + pointsPerFood;
-            SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
-            other.gameObject.SetActive(false);
-        }
-        else if (other.tag == "Pizza")
-        {
-            food += pointsPerPizza;
-            foodText.text = "Food: " + food + " +" + pointsPerPizza;
-            SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
-            other.gameObject.SetActive(false);
-        }
-        else if (other.tag == "Coin")
-        {
-            coins++;
-            coinText.text = "C x " + coins;
-            SoundManager.instance.RandomizeSfx(coinPickupSound1, coinPickupSound2);
-            other.gameObject.SetActive(false);
-        }
-    }
-
-	public void OnPickup(ItemTypes type, int pointsPerItem) {
-		switch (type) {
-			case ItemTypes.Exit:
-				Invoke("Restart", restartLevelDelay);
-				enabled = false;
-				break;
-			case ItemTypes.Food:
-				food += pointsPerItem;
-				foodText.text = "Food: " + food + " +" + pointsPerItem;
-				break;
-		}
-	}
-
-    private void Restart()
-    {
-        Application.LoadLevel(Application.loadedLevel);
-    }
-
     public void LoseFood(int loss)
     {
         //animator.SetTrigger("playerHit");
-        food -= loss;
-        foodText.text = "Food: " + food + " -" + loss;
+        GameManager.instance.foodPoints -= loss;
         CheckIfGameOver();
     }
 
     private void CheckIfGameOver()
     {
-        if (food <= 0)
+        if (GameManager.instance.foodPoints <= 0)
         {
             SoundManager.instance.PlaySingle(gameOverSound);
             SoundManager.instance.musicSource.Stop();

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class GameRenderer : MonoBehaviour {
-
+    /*
 	private Transform player;
 	private float oldPos = 0;
 
@@ -27,9 +27,9 @@ public class GameRenderer : MonoBehaviour {
 	{
 		oldPos = player.position.sqrMagnitude;
 		float sqrRemainingDistance = (player.position - transform.position).sqrMagnitude;
-			
+
 		if (GameManager.instance.gameMode == GameMode.ThreeD) {
-			if (sqrRemainingDistance < 10f) {
+			if (sqrRemainingDistance < 20f) {
 				foreach (Transform child in transform)
 					child.gameObject.SetActive (true);
 			} else {
@@ -42,5 +42,7 @@ public class GameRenderer : MonoBehaviour {
 					child.gameObject.SetActive (true);
 			}
 		}
+        
 	}
+    */
 }

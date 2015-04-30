@@ -4,14 +4,14 @@ using System.Collections;
 public class Loader : MonoBehaviour {
 
     public GameObject gameManager;
-    //public GameObject soundManager;
+    public GameObject soundManager;
 
 	// Use this for initialization
 	void Awake () {
         if (GameManager.instance == null)
             Instantiate(gameManager);
 
-        //if (GameManager.instance == null)
-        //    Instantiate(soundManager);
+        if (SoundManager.instance == null)
+            Instantiate(soundManager);
 	}
 }
