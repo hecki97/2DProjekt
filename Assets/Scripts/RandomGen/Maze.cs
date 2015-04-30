@@ -35,11 +35,6 @@ public class Maze : MonoBehaviour {
         return cells[coordinates.x, coordinates.y];
     }
 
-    void Start()
-    {
-        StartCoroutine(Generate());
-    }
-
     public IEnumerator Generate()
     {
         cells = new MazeCell[size.x, size.y];
