@@ -5,6 +5,7 @@ public class PlayerStatsData {
 
 	//Player Stats
     public Difficulty difficulty = Difficulty.Normal;
+    public bool unlocked = true;
     public int playerCoinsCount = 0;
 	public int playerFoodPoints = 100;
     public int playerMaxFoodPoints = 100;

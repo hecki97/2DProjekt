@@ -6,18 +6,20 @@ public abstract class MovingObject : MonoBehaviour
 	public float moveTime = 0.1f;
 	public LayerMask blockingLayer;
 
-	private BoxCollider2D boxCollider;
-	private Rigidbody2D rb2D;
+	private BoxCollider boxCollider;
+	private Rigidbody rb2D;
 	private float inverseMoveTime;
 
 	// Use this for initialization
 	protected virtual void Start ()
 	{
-		boxCollider = GetComponent<BoxCollider2D> ();
-        rb2D = GetComponent<Rigidbody2D> ();
+		boxCollider = GetComponent<BoxCollider> ();
+        rb2D = GetComponent<Rigidbody> ();
 		inverseMoveTime = 1f / moveTime;
 	}
-	protected bool Move (int xDir, int yDir, out RaycastHit2D hit)
+	
+    /*
+    protected bool Move (int xDir, int yDir, out RaycastHit2D hit)
 	{
 		Vector2 start = transform.position;
 		Vector2 end = start + new Vector2 (xDir, yDir);
@@ -32,6 +34,25 @@ public abstract class MovingObject : MonoBehaviour
 		}
 		return false;
 	}
+    */
+
+    protected bool Move(int xDir, int yDir, out RaycastHit hit)
+    {
+        Vector3 start = transform.position;
+        Vector3 end = start + new Vector3(xDir, yDir, 0f);
+
+        boxCollider.enabled = false;
+        //hit = Physics.Linecast(start, end, blockingLayer);
+        Physics.Raycast(start, Vector3.Normalize(new Vector3(xDir, yDir, 0f)), out hit, (end - start).sqrMagnitude, blockingLayer);
+        boxCollider.enabled = true;
+
+        if (hit.transform == null)
+        {
+            StartCoroutine(SmoothMovement(end));
+            return true;
+        }
+        return false;
+    }
 
 	protected IEnumerator SmoothMovement (Vector3 end)
 	{
@@ -47,7 +68,7 @@ public abstract class MovingObject : MonoBehaviour
 
 	protected virtual void AttemptMove <T> (int xDir, int yDir) where T : Component
 	{
-        RaycastHit2D hit;
+        RaycastHit hit;
 		bool canMove = Move (xDir, yDir, out hit);
 
 		if (hit.transform == null)

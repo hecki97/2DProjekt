@@ -74,8 +74,6 @@ public class LevelColorEditor : EditorWindow {
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(new GUIContent("Add New Color!")))
         {
-			//if (items.Count <= 0)
-			//	loadXMLFile();
             items.Add(new LevelColorData());
             itemEditName.Add(true);
             colors.Add(new Color32(0, 0, 0, 255));
@@ -103,11 +101,10 @@ public class LevelColorEditor : EditorWindow {
             else
             {
                 EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width / 3));
-                EditorGUILayout.LabelField(new GUIContent("HEX"), GUILayout.Width(25f));
-				EditorGUILayout.SelectableLabel(items[i].GetHex(), GUILayout.Height(15f), GUILayout.Width(47f));
+                EditorGUILayout.LabelField(new GUIContent("HEX"), GUILayout.Height(14f), GUILayout.Width(30f));
+				EditorGUILayout.SelectableLabel(items[i].GetHex(), GUILayout.Height(14f), GUILayout.Width(50f));
                 EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width / 3));
             items[i].SetColorAsHex(colors[i]);
 			GUILayout.FlexibleSpace();
             if (GUILayout.Button(new GUIContent("C"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
@@ -121,7 +118,6 @@ public class LevelColorEditor : EditorWindow {
                 itemShowValues.RemoveAt(i);
                 i--;
             }
-            EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();

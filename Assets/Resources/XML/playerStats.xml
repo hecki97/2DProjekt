@@ -1,2 +1,43 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<ArrayOfPlayerStatsData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<?xml version="1.0" encoding="Windows-1252"?>
+<ArrayOfPlayerStatsData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PlayerStatsData>
+    <difficulty>Dev</difficulty>
+    <unlocked>false</unlocked>
+    <playerCoinsCount>999</playerCoinsCount>
+    <playerFoodPoints>999</playerFoodPoints>
+    <playerMaxFoodPoints>999</playerMaxFoodPoints>
+    <playerHealthPoints>999</playerHealthPoints>
+    <playerMaxHealthPoints>999</playerMaxHealthPoints>
+    <playerDamageCount>1</playerDamageCount>
+  </PlayerStatsData>
+  <PlayerStatsData>
+    <difficulty>Easy</difficulty>
+    <unlocked>true</unlocked>
+    <playerCoinsCount>0</playerCoinsCount>
+    <playerFoodPoints>150</playerFoodPoints>
+    <playerMaxFoodPoints>150</playerMaxFoodPoints>
+    <playerHealthPoints>5</playerHealthPoints>
+    <playerMaxHealthPoints>5</playerMaxHealthPoints>
+    <playerDamageCount>1</playerDamageCount>
+  </PlayerStatsData>
+  <PlayerStatsData>
+    <difficulty>Normal</difficulty>
+    <unlocked>true</unlocked>
+    <playerCoinsCount>0</playerCoinsCount>
+    <playerFoodPoints>100</playerFoodPoints>
+    <playerMaxFoodPoints>100</playerMaxFoodPoints>
+    <playerHealthPoints>3</playerHealthPoints>
+    <playerMaxHealthPoints>3</playerMaxHealthPoints>
+    <playerDamageCount>1</playerDamageCount>
+  </PlayerStatsData>
+  <PlayerStatsData>
+    <difficulty>Hard</difficulty>
+    <unlocked>false</unlocked>
+    <playerCoinsCount>0</playerCoinsCount>
+    <playerFoodPoints>75</playerFoodPoints>
+    <playerMaxFoodPoints>75</playerMaxFoodPoints>
+    <playerHealthPoints>2</playerHealthPoints>
+    <playerMaxHealthPoints>2</playerMaxHealthPoints>
+    <playerDamageCount>1</playerDamageCount>
+  </PlayerStatsData>
+</ArrayOfPlayerStatsData>

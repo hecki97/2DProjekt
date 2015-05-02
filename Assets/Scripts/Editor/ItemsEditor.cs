@@ -23,6 +23,12 @@ public class ItemsEditor : EditorWindow
         loadXMLFile();
     }
 
+    void OnFocus()
+    {
+        if (items.Count <= 0)
+            loadXMLFile();
+    }
+
     void OnLostFocus()
     {
         XMLFileHandler.saveXMLFile<ItemData>(items, filePath, fileName);
@@ -43,8 +49,6 @@ public class ItemsEditor : EditorWindow
                 try
                 {
                     items = serializer.Deserialize(file) as List<ItemData>;
-                    //itemFoldouts = new List<bool>(items.Count);
-
                     for (int i = 0; i < items.Count; i++)
                     {
                         Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/" + items[i].spritePath);

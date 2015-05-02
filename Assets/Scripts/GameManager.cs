@@ -146,9 +146,9 @@ public class GameManager : MonoBehaviour
         mat.color = levelColor;
 
         //Test
-        if (Application.loadedLevel == 1)
-            gameMode = GameMode.TwoD;
-        else if (Application.loadedLevel == 2)
+        //if (Application.loadedLevel == 1)
+        //    gameMode = GameMode.TwoD;
+        //else if (Application.loadedLevel == 2)
             gameMode = GameMode.ThreeD;
 
 		levelText.text = "Level " + level;

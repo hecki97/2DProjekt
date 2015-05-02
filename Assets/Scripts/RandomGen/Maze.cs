@@ -131,7 +131,7 @@ public class Maze : MonoBehaviour {
         newCell.coordinates = coordinates;
         newCell.name = "MazeCell " + coordinates.x + ", " + coordinates.y;
         newCell.transform.parent = transform;
-        newCell.transform.localPosition = new Vector3(coordinates.x - size.x * .5f + .5f, coordinates.y - size.y * .5f + .5f, 0f);
+        newCell.transform.localPosition = new Vector3(coordinates.x - size.x * 2f, coordinates.y - size.y * 2f, .5f);
         return newCell;
     }
 

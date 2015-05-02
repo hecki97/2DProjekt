@@ -184,13 +184,12 @@ public class Player : MovingObject {
     {
         base.AttemptMove<T>(xDir, yDir);
 
-        RaycastHit2D hit;
+        RaycastHit hit;
         if (Move(xDir, yDir, out hit))
         {
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
             GameManager.instance.foodPoints--;
         }
-
         CheckIfGameOver();
         GameManager.instance.playersTurn = false;
     }

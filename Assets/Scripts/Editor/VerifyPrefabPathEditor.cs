@@ -19,7 +19,12 @@ public class VerifyPrefabPathEditor : EditorWindow {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(new GUIContent("Assets/Resources/"), GUILayout.MaxWidth(Screen.width / 4));
         input = EditorGUILayout.TextField(string.Empty, input);
+        //if (GUILayout.Button(new GUIContent("X"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
+        //    input = string.Empty;
         EditorGUILayout.EndHorizontal();
+
+        if (GUILayout.Button(new GUIContent("Copy to Clipboard")))
+            EditorGUIUtility.systemCopyBuffer = "Assets/Resources/" + input;
     }
 
     void Update()
