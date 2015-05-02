@@ -15,6 +15,11 @@ public class LevelColorData
         hexColor = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
     }
 
+	public string GetHex()
+	{
+		return hexColor;
+	}
+
     public Color32 GetColor32()
     {
         byte r = byte.Parse(hexColor.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);

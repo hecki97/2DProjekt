@@ -24,9 +24,16 @@ public class LevelColorEditor : EditorWindow {
         loadXMLFile();
     }
 
+	void OnFocus()
+	{
+		if (items.Count <= 0)
+			loadXMLFile ();
+	}
+
     void OnLostFocus()
     {
-        XMLFileHandler.saveXMLFile<LevelColorData>(items, filePath, fileName);
+		if (items.Count > 0)
+        	XMLFileHandler.saveXMLFile<LevelColorData>(items, filePath, fileName);
     }
 
     private static void loadXMLFile()
@@ -35,7 +42,6 @@ public class LevelColorEditor : EditorWindow {
         itemEditName.Clear();
         colors.Clear();
         itemShowValues.Clear();
-
         if (File.Exists(filePath + fileName))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<LevelColorData>));
@@ -45,8 +51,6 @@ public class LevelColorEditor : EditorWindow {
                 try
                 {
                     items = (List<LevelColorData>) serializer.Deserialize(file);
-                    //itemEditName = new List<bool>(items.Count);
-
                     for (int i = 0; i < items.Count; i++)
                     {
                         itemEditName.Add(false);
@@ -70,6 +74,8 @@ public class LevelColorEditor : EditorWindow {
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(new GUIContent("Add New Color!")))
         {
+			//if (items.Count <= 0)
+			//	loadXMLFile();
             items.Add(new LevelColorData());
             itemEditName.Add(true);
             colors.Add(new Color32(0, 0, 0, 255));
@@ -86,25 +92,24 @@ public class LevelColorEditor : EditorWindow {
             if (string.IsNullOrEmpty(items[i].name))
                 items[i].name = "New Color";
 
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width));
+            EditorGUILayout.BeginHorizontal();
             if (itemEditName[i])
                 items[i].name = EditorGUILayout.TextField(items[i].name, GUILayout.Width(Screen.width / 3));
             else
                 EditorGUILayout.LabelField(items[i].name, GUILayout.Width(Screen.width / 3));
+            itemEditName[i] = GUILayout.Toggle(itemEditName[i], new GUIContent("Edit"), GUILayout.Width(40f));
             if (!itemShowValues[i])
                 colors[i] = EditorGUILayout.ColorField(colors[i], GUILayout.Width(Screen.width / 3));
             else
             {
                 EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width / 3));
-                EditorGUILayout.LabelField(new GUIContent("HEX"), GUILayout.Width(30f));
-                EditorGUILayout.SelectableLabel("000000", GUILayout.Height(15f), GUILayout.Width(45f));
-                EditorGUILayout.LabelField(new GUIContent("RGB"), GUILayout.Width(30f));
-                EditorGUILayout.SelectableLabel("000, 000, 000", GUILayout.Height(15f), GUILayout.Width(85f));
+                EditorGUILayout.LabelField(new GUIContent("HEX"), GUILayout.Width(25f));
+				EditorGUILayout.SelectableLabel(items[i].GetHex(), GUILayout.Height(15f), GUILayout.Width(47f));
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width / 3));
             items[i].SetColorAsHex(colors[i]);
-            itemEditName[i] = GUILayout.Toggle(itemEditName[i], new GUIContent("Edit"), GUILayout.Width(40f));
+			GUILayout.FlexibleSpace();
             if (GUILayout.Button(new GUIContent("C"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
                 itemShowValues[i] = !itemShowValues[i];
             

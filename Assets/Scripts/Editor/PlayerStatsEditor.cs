@@ -21,14 +21,23 @@ public class PlayerStatsEditor : EditorWindow {
         loadXMLFile();
     }
 
-    void OnInspectorUpdate()
-    {
-        if (!EditorApplication.isPlaying)
-            loadXMLFile();
-    }
+	void OnFocus()
+	{
+		if (l_psd.Count <= 0)
+			loadXMLFile ();
+	}
+
+	void OnLostFocus()
+	{
+		if (l_psd.Count > 0)
+			XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+	}
 
     private static void loadXMLFile()
     {
+		l_psd.Clear ();
+		itemFoldouts.Clear ();
+
         if (File.Exists(filePath + fileName))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<PlayerStatsData>));
@@ -69,14 +78,19 @@ public class PlayerStatsEditor : EditorWindow {
         if (GUILayout.Button(new GUIContent("Save Player Stats!")))
             XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
 
-        if (GUILayout.Button(new GUIContent("Add New Player Stats!")))
-        {
-            l_psd.Add(new PlayerStatsData());
-            itemFoldouts.Add(false);
-        }
+		EditorGUILayout.BeginHorizontal();
+		if (GUILayout.Button(new GUIContent("Add Player Stats!")))
+		{
+			//if (l_psd.Count <= 0)
+			//	loadXMLFile();
+			l_psd.Add(new PlayerStatsData());
+			itemFoldouts.Add(false);
+		}
+		if (GUILayout.Button(new GUIContent("Load Item List!")))
+			loadXMLFile();
+		EditorGUILayout.EndHorizontal();
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-
         for (int i = 0; i < l_psd.Count; i++)
         {
             itemFoldouts[i] = EditorGUILayout.Foldout(itemFoldouts[i], new GUIContent("Player Stats (" + l_psd[i].difficulty + ")"));
@@ -99,6 +113,15 @@ public class PlayerStatsEditor : EditorWindow {
             }
         }
         GUILayout.EndScrollView();
+		if (GUILayout.Button(new GUIContent("Clear List!")))
+		{
+			if (EditorUtility.DisplayDialog("Warning!", "Do you really want to clear the whole List?", "Yes!", "No!"))
+			{
+				l_psd.Clear();
+				itemFoldouts.Clear();
+				XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+			}
+		}
     }
 
     private void OnDestroy()

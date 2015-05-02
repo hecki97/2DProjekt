@@ -30,6 +30,10 @@ public class ItemsEditor : EditorWindow
 
     private static void loadXMLFile()
     {
+		items.Clear ();
+		itemFoldouts.Clear ();
+		foldout.Clear ();
+		sprite.Clear ();
         if (File.Exists(filePath + fileName))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<ItemData>));
@@ -39,7 +43,7 @@ public class ItemsEditor : EditorWindow
                 try
                 {
                     items = serializer.Deserialize(file) as List<ItemData>;
-                    itemFoldouts = new List<bool>(items.Count);
+                    //itemFoldouts = new List<bool>(items.Count);
 
                     for (int i = 0; i < items.Count; i++)
                     {
@@ -71,6 +75,8 @@ public class ItemsEditor : EditorWindow
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(new GUIContent("Add New Item!")))
         {
+			if (items.Count <= 0)
+				loadXMLFile();
             items.Add(new ItemData());
             itemFoldouts.Add(false);
             foldout.Add(false);
