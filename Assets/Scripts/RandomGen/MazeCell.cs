@@ -12,7 +12,8 @@ public class MazeCell : MonoBehaviour {
     public void Initialize(MazeRoom room)
     {
         room.Add(this);
-        transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floor_material;
+        for (int i = 0; i < transform.childCount; i++)
+            transform.GetChild(i).GetComponent<Renderer>().material = room.settings.floor_material;
     }
 
     public MazeCellEdge GetEdge(MazeDirection direction)
