@@ -41,6 +41,16 @@ public static class MazeDirections
                                                 Quaternion.Euler(0f, 0f, 180f)  //Quaternion.Euler(0f, 270f, 0f)
                                             };
 
+    public static MazeDirection GetNextClockWise(this MazeDirection direction)
+    {
+        return (MazeDirection)(((int)direction + 1) % Count);
+    }
+
+    public static MazeDirection GetNextCounterClockWise(this MazeDirection direction)
+    {
+        return (MazeDirection)(((int)direction + Count - 1) % Count);
+    }
+
     public static Quaternion ToRotation(this MazeDirection direction)
     {
         return rotations[(int)direction];

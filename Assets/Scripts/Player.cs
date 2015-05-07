@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public enum Direction { Nord, South, West, East };
 public class Player : MovingObject {
 
     public int pointsPerFood = 10;
@@ -16,11 +15,11 @@ public class Player : MovingObject {
     public AudioClip drinkSound2;
     public AudioClip gameOverSound;
 
-    public Direction direction;
-
+    public float speed;
+    private MazeDirection currentDirection;
     private Vector3 endPos;
-    private bool isLerping = false;
-    private float timeStartedLerping;
+    //public bool isLerping = false;
+    //private float timeStartedLerping;
 
     private Transform cam;
 
@@ -28,12 +27,10 @@ public class Player : MovingObject {
 
 	protected override void Start ()
     {
-        direction = Direction.Nord;
         if (GameManager.instance.gameMode == GameMode.ThreeD)
              cam = GameObject.Find("Camera").transform;
 
         ItemGenericCollider.OnPickup += ItemGenericCollider_OnPickup;
-
         base.Start();
 	}
 
@@ -61,8 +58,42 @@ public class Player : MovingObject {
         horizontal = (int) (Input.GetAxisRaw("Horizontal"));
         vertical = (int) (Input.GetAxisRaw("Vertical"));
 
-        if (horizontal != 0)
-            vertical = 0;
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            endPos.z = ((transform.localEulerAngles.z + 360f - 90f) % 360f);
+            currentDirection = currentDirection.GetNextClockWise();
+        } 
+
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            endPos.z = ((transform.localEulerAngles.z + 90f) % 360f);
+            currentDirection = currentDirection.GetNextCounterClockWise();
+        }
+            
+        if (endPos.z != transform.localEulerAngles.z)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(endPos), speed * Time.deltaTime);
+
+        if (vertical != 0 && !GameManager.instance.isPaused)
+        {
+            switch (currentDirection)
+            {
+                case MazeDirection.North:
+                    AttemptMove<Wall>(0, vertical);
+                    break;
+                case MazeDirection.East:
+                    AttemptMove<Wall>(vertical, 0);
+                    break;
+                case MazeDirection.South:
+                    AttemptMove<Wall>(0, -vertical);
+                    break;
+                case MazeDirection.West:
+                    AttemptMove<Wall>(-vertical, 0);
+                    break;
+            }
+        }
+
+        //if (horizontal != 0)
+        //    vertical = 0;
 
 		if (Input.touchCount > 0) {
 
@@ -86,6 +117,7 @@ public class Player : MovingObject {
 			}
 		}
 
+        /*
         //Test!!
         if (GameManager.instance.gameMode == GameMode.TwoD)
         {
@@ -94,6 +126,7 @@ public class Player : MovingObject {
         }
         else
         {
+
             if (horizontal != 0 || vertical != 0 && !isLerping && !GameManager.instance.isPaused)
             {
                 switch (direction)
@@ -160,17 +193,20 @@ public class Player : MovingObject {
             float timeSinceStarted = Time.time - timeStartedLerping;
             float percentageComplete = timeSinceStarted / .5f;
 
-            cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, Quaternion.Euler(endPos), percentageComplete);
+            //cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, Quaternion.Euler(endPos), percentageComplete);
+            //transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles, endPos, percentageComplete);
 
-            if (percentageComplete >= .8f)
+            if (percentageComplete >= 1f)
                 isLerping = false;
         }
+        */ 
     }
 
-    IEnumerator SetDirection(Direction _dir)
+    /*
+    IEnumerator SetDirection(MazeDirection _dir)
     {
         yield return new WaitForSeconds(.25f);
-        direction = _dir;
+        currentDirection = _dir;
     }
 
     void StartLerping(Vector3 _endPos)
@@ -179,6 +215,7 @@ public class Player : MovingObject {
         timeStartedLerping = Time.time;
         isLerping = true;
     }
+    */
 
     protected override void AttemptMove<T>(int xDir, int yDir)
     {

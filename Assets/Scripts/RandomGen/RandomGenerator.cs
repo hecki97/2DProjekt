@@ -34,8 +34,8 @@ public class RandomGenerator : MonoBehaviour {
     {
         StopAllCoroutines();
         Destroy(maze_instance.gameObject);
-        if (player_instance != null)
-            Destroy(player_instance.gameObject);
+        //if (player_instance != null)
+            //Destroy(player_instance.gameObject);
         StartCoroutine(BeginGame());
     }
 }
