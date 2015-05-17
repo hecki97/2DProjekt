@@ -65,8 +65,8 @@ public class ItemGenericCollider : MonoBehaviour {
         offset3D = items[i].offset3D;
         pointsPerItem = Mathf.RoundToInt(Random.Range(items[i].pointsPerItem.x, items[i].pointsPerItem.y));
 
-        transform.localScale = (GameManager.instance.gameMode == GameMode.TwoD) ? scale2D : scale3D;
-        transform.position = (GameManager.instance.gameMode == GameMode.TwoD) ? (transform.position + offset2D) : (transform.position + offset3D);
+//        transform.localScale = (GameManager.instance.gameMode == GameMode.TwoD) ? scale2D : scale3D;
+//        transform.position = (GameManager.instance.gameMode == GameMode.TwoD) ? (transform.position + offset2D) : (transform.position + offset3D);
     }
 
     void SecretEventHandler_OnTrigger()

@@ -47,6 +47,30 @@ public class MazeCell : MonoBehaviour {
         }
     }
 
+    public void OnPlayerEntered()
+    {
+        room.Show();
+        for (int i = 0; i < edges.Length; i++)
+            edges[i].OnPlayerEntered();
+    }
+
+    public void OnPlayerExited()
+    {
+        room.Hide();
+        for (int i = 0; i < edges.Length; i++)
+            edges[i].OnPlayerExited();
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void SetEdge(MazeDirection direction, MazeCellEdge edge)
     {
         edges[(int)direction] = edge;

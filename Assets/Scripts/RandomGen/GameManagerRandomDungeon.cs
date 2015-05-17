@@ -6,25 +6,27 @@ using System.Xml.Serialization;
 using System.IO;
 using UnityStandardAssets.ImageEffects;
 
-public enum MenuInstance { MainMenu, PauseMenu, OptionsMenu, AudioMenu, GraphicsMenu };
-public class GameManager : MonoBehaviour
-{
-    public static GameManager instance = null;
-    private RandomGenerator generatorScript;
-    private BoardManager boardScript;
+public class GameManagerRandomDungeon : MonoBehaviour {
+
+    public static GameManagerRandomDungeon instance = null;
+    //private BoardManager boardScript;
     private List<Enemy> enemies;
     private bool enemiesMoving;
     private bool doingSetup = true;
 
     //SecretMode!
+    public float duration;
     public bool secretModeActive = false;
+
     private BloomOptimized bloom;
+    private Color32 colorStart;
+    private Color32 colorEnd;
 
     //      Score
     public float time = 0f;
-    public int stepCount = 0;
 
     //      Game Settings
+    //public GameMode gameMode;
     public Difficulty difficulty = Difficulty.Normal;
     public bool isPaused = false;
     public int level = 1;
@@ -42,8 +44,9 @@ public class GameManager : MonoBehaviour
     //      Level Color
     public TextAsset levelColorXMLFile;
 
+    public Material mat;
     private List<LevelColorData> colors;
-    [HideInInspector] public Color32 levelColor;
+    private Color32 levelColor;
 
     //       PlayerStats
     public TextAsset playerStatsXMLFile;
@@ -73,20 +76,8 @@ public class GameManager : MonoBehaviour
 
 		DontDestroyOnLoad (gameObject);
 		enemies = new List<Enemy>();
-        if (Application.loadedLevel == 0) return;
-		if (Application.loadedLevelName == "Classic3D")
-        {
-            boardScript = GetComponent<BoardManager>();
-            InitGame();
-            boardScript.SetupScene(level);
-            Invoke("HideLevelImage", levelStartDelay);
-        }
-        else
-        {
-            generatorScript = GetComponent<RandomGenerator>();
-            InitGame();
-            StartCoroutine(generatorScript.BeginGame());
-        }
+		//boardScript = GetComponent<BoardManager> ();
+		InitGame ();
 	}
 
     void OnDisable()
@@ -101,8 +92,10 @@ public class GameManager : MonoBehaviour
         if (secretModeActive)
             SoundManager.instance.musicSource.clip = SoundManager.instance.secretBGM;
         else
+        {
             SoundManager.instance.musicSource.clip = SoundManager.instance.mainBGM;
-
+            mat.color = levelColor;
+        }
         bloom.enabled = secretModeActive;
         SoundManager.instance.musicSource.Play();
     }
@@ -125,19 +118,7 @@ public class GameManager : MonoBehaviour
 
     void OnLevelWasLoaded()
     {
-        if (Application.loadedLevelName == "Classic3D")
-        {
-            boardScript = GetComponent<BoardManager>();
-            InitGame();
-            boardScript.SetupScene(level);
-            Invoke("HideLevelImage", levelStartDelay);
-        }
-        else
-        {
-            generatorScript = GetComponent<RandomGenerator>();
-            InitGame();
-            StartCoroutine(generatorScript.BeginGame());
-        }
+        InitGame();
     }
 
 	void InitGame ()
@@ -157,27 +138,44 @@ public class GameManager : MonoBehaviour
             bloom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BloomOptimized>();
             bloom.enabled = secretModeActive;
         }
+        colorStart = ColorUtil.getRandomColor();
+        colorEnd = ColorUtil.getRandomColor();
         levelColor = colors[Random.Range(0, colors.Count)].GetColor32();
+        mat.color = levelColor;
 
 		levelText.text = "Level " + level;
 		levelImage.gameObject.SetActive (true);
-		
+		Invoke ("HideLevelImage", levelStartDelay);
+
 		enemies.Clear();
+//		boardScript.SetupScene (level);
 	}
 
-	public void HideLevelImage ()
+	void HideLevelImage ()
 	{
 		levelImage.gameObject.SetActive (false);
 		doingSetup = false;
 	}
 
+    public void GetRandomLvlColor()
+    {
+        mat.color = colors[Random.Range(0, colors.Count)].GetColor32();
+    }
+
 	// Update is called once per frame
 	void Update ()
 	{
+        if (secretModeActive)
+        {
+            float lerp = Mathf.PingPong(Time.time, duration) / duration;
+            mat.color = Color.Lerp(colorStart, colorEnd, lerp);
+        }
+
         if (!isPaused && Application.loadedLevel != 0 && !doingSetup)
             time += Time.deltaTime;
 
-		if (playersTurn || enemiesMoving || doingSetup || isPaused) return;
+		if (playersTurn || enemiesMoving || doingSetup || isPaused)
+			return;
 
 		StartCoroutine (MoveEnemies ());
 	}
@@ -194,8 +192,7 @@ public class GameManager : MonoBehaviour
 
 	public void GameOver ()
 	{
-        float score = Mathf.RoundToInt((foodPoints * 50 + maxFoodPoints * 100 + healthPoints * 50 + maxHealthPoints * 100 + coinsCount * 100) * level - (Mathf.PI * (time / stepCount)));
-		levelText.text = "After " + level + " levels, you died. \n Score: " + score / 1000;
+		levelText.text = "After " + level + " levels, you died.";
 		levelImage.gameObject.SetActive (true);
 		enabled = false;
 	}

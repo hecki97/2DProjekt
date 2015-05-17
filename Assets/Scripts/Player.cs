@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class Player : MovingObject {
 
@@ -16,19 +15,19 @@ public class Player : MovingObject {
     public AudioClip gameOverSound;
 
     public float speed;
+    private MazeCell currentCell;
     private MazeDirection currentDirection;
     private Vector3 endPos;
     //public bool isLerping = false;
     //private float timeStartedLerping;
-
-    private Transform cam;
+    //private Transform cam;
 
     private Vector2 touchOrigin = -Vector2.one;
 
 	protected override void Start ()
     {
-        if (GameManager.instance.gameMode == GameMode.ThreeD)
-             cam = GameObject.Find("Camera").transform;
+        //if (GameManager.instance.gameMode == GameMode.ThreeD)
+        //     cam = GameObject.Find("Camera").transform;
 
         ItemGenericCollider.OnPickup += ItemGenericCollider_OnPickup;
         base.Start();
@@ -89,6 +88,13 @@ public class Player : MovingObject {
                 case MazeDirection.West:
                     AttemptMove<Wall>(-vertical, 0);
                     break;
+            }
+            
+            if (Application.loadedLevelName != "Classic3D")
+            {
+                MazeCellEdge edge = currentCell.GetEdge(currentDirection);
+                if (edge is MazePassage)
+                    SetLocation(edge.other_cell);
             }
         }
 
@@ -217,6 +223,15 @@ public class Player : MovingObject {
     }
     */
 
+    public void SetLocation(MazeCell cell)
+    {
+        if (currentCell != null)
+            currentCell.OnPlayerExited();
+
+        currentCell = cell;
+        currentCell.OnPlayerEntered();
+    }
+
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
         base.AttemptMove<T>(xDir, yDir);
@@ -225,6 +240,7 @@ public class Player : MovingObject {
         if (Move(xDir, yDir, out hit))
         {
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+            GameManager.instance.stepCount++;
             GameManager.instance.foodPoints--;
         }
         CheckIfGameOver();

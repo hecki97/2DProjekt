@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.ImageEffects;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,7 +16,7 @@ public class MainMenuGUIController : MonoBehaviour {
         anim = GetComponent<Animator>();
         guiHandler = GameObject.Find("Canvas").GetComponent<GUIHandler>();
         optionsMenuAnim = GameObject.Find("OptionsMenu").GetComponent<Animator>();
-
+        
         anim.SetTrigger("triggerSkipFadeIn");
     }
 

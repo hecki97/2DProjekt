@@ -57,7 +57,7 @@ public class BoardManager : MonoBehaviour
         dungeonBoard.SetParent(boardHolder);
 
         //Test!!
-        if (GameManager.instance.gameMode == GameMode.TwoD) {
+        /*if (GameManager.instance.gameMode == GameMode.TwoD) {
 			for (int x = -1; x < columns + 1; x++) {
 				for (int y = -1; y < rows + 1; y++) {
 					GameObject toInstantiate = floorTiles [Random.Range (0, floorTiles.Length)];
@@ -70,7 +70,7 @@ public class BoardManager : MonoBehaviour
 					//instance.transform.SetParent (boardHolder);
 				}
 			}
-		} else {
+		} else {*/
 			for (int x = -1; x < columns + 1; x++) {
 				for (int y = -1; y < rows + 1; y++) {
 					if (x == -1 || x == columns || y == -1 || y == rows)
@@ -87,7 +87,7 @@ public class BoardManager : MonoBehaviour
 				InstantiateGameObject (floorTiles, "FloorSprite", new Vector3 (gridPositions [i].x, gridPositions [i].y, -0.5f), new Vector3 (0f, 180f, 180f));
 			}
 		}
-	}
+	//}
 
     void InstantiateGameObject(GameObject[] gameObject, string name ,Vector3 position)
     {
@@ -146,8 +146,10 @@ public class BoardManager : MonoBehaviour
         //Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
 	}
 
+    /*
     void Start()
     {
         SetupScene(0);
     }
+    */
 }

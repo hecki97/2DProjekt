@@ -11,7 +11,7 @@ public class GUIHandler : MonoBehaviour {
     void Start()
     {
         blur = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BlurOptimized>();
-        blur.enabled = false;
+        blur.enabled = (Application.loadedLevel != 0) ? false : true;
     }
 
     public IEnumerator ButtonSwitchGUIPanel(MenuInstance menu, Animator start, Animator target, float time)

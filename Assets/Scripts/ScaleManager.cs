@@ -11,7 +11,7 @@ public class ScaleManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	    if (GameManager.instance.gameMode == GameMode.TwoD)
+/*	    if (GameManager.instance.gameMode == GameMode.TwoD)
         {
             transform.localScale = scale2D;
             transform.position += offset2D;
@@ -21,5 +21,6 @@ public class ScaleManager : MonoBehaviour {
             transform.localScale = scale3D;
             transform.position += offset3D;
         }
+ */
 	}
 }
