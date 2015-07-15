@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public MenuInstance menu = MenuInstance.PauseMenu;
     public float levelStartDelay = 2f;
 
+    private Text levelName;
     private Text levelText;
     private Image levelImage;
 
@@ -145,6 +146,7 @@ public class GameManager : MonoBehaviour
         if (GameObject.Find("LevelImage") == null && GameObject.Find("LevelText") == null) return;
 
 		doingSetup = true;
+        levelName = GameObject.Find("LevelName").GetComponent<Text>();
 		levelImage = GameObject.Find ("LevelImage").GetComponent<Image>();
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
 
@@ -157,7 +159,7 @@ public class GameManager : MonoBehaviour
             bloom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BloomOptimized>();
             bloom.enabled = secretModeActive;
         }
-        levelColor = colors[Random.Range(0, colors.Count)].GetColor32();
+        levelColor = ColorUtil.ConvertHEXtoRGB(colors[Random.Range(0, colors.Count)].HexString);
 
 		levelText.text = "Level " + level;
 		levelImage.gameObject.SetActive (true);

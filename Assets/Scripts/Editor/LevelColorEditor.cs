@@ -11,7 +11,7 @@ public class LevelColorEditor : EditorWindow {
 
     private static List<LevelColorData> items = new List<LevelColorData>();
     private static List<bool> itemEditName = new List<bool>();
-    private static List<bool> itemShowValues = new List<bool>();
+    private static List<int> itemColorSwitch = new List<int>();
 
     private static List<Color32> colors = new List<Color32>();
 
@@ -41,7 +41,7 @@ public class LevelColorEditor : EditorWindow {
         items.Clear();
         itemEditName.Clear();
         colors.Clear();
-        itemShowValues.Clear();
+        itemColorSwitch.Clear();
         if (File.Exists(filePath + fileName))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<LevelColorData>));
@@ -54,8 +54,8 @@ public class LevelColorEditor : EditorWindow {
                     for (int i = 0; i < items.Count; i++)
                     {
                         itemEditName.Add(false);
-                        itemShowValues.Add(false);
-                        colors.Add(items[i].GetColor32());
+                        itemColorSwitch.Add(0);
+                        colors.Add(ColorUtil.ConvertHEXtoRGB(items[i].HexString));
                     }
                 }
                 catch (System.Exception e)
@@ -77,7 +77,7 @@ public class LevelColorEditor : EditorWindow {
             items.Add(new LevelColorData());
             itemEditName.Add(true);
             colors.Add(new Color32(0, 0, 0, 255));
-            itemShowValues.Add(false);
+            itemColorSwitch.Add(0);
         }
         if (GUILayout.Button(new GUIContent("Load Item List!")))
             loadXMLFile();
@@ -87,35 +87,34 @@ public class LevelColorEditor : EditorWindow {
 
         for (int i = 0; i < items.Count; i++)
         {
-            if (string.IsNullOrEmpty(items[i].name))
-                items[i].name = "New Color";
+            if (string.IsNullOrEmpty(items[i].Name))
+                items[i].Name = "New Color";
 
             EditorGUILayout.BeginHorizontal();
             if (itemEditName[i])
-                items[i].name = EditorGUILayout.TextField(items[i].name, GUILayout.Width(Screen.width / 3));
+                items[i].Name = EditorGUILayout.TextField(items[i].Name, GUILayout.Width(Screen.width / 3));
             else
-                EditorGUILayout.LabelField(items[i].name, GUILayout.Width(Screen.width / 3));
+                EditorGUILayout.LabelField(items[i].Name, GUILayout.Width(Screen.width / 3));
             itemEditName[i] = GUILayout.Toggle(itemEditName[i], new GUIContent("Edit"), GUILayout.Width(40f));
-            if (!itemShowValues[i])
-                colors[i] = EditorGUILayout.ColorField(colors[i], GUILayout.Width(Screen.width / 3));
+            if (itemColorSwitch[i] == 0)
+                colors[i] = EditorGUILayout.ColorField(colors[i], GUILayout.Width(Screen.width / 3), GUILayout.Height(15f));
             else
             {
                 EditorGUILayout.BeginHorizontal(GUILayout.Width(Screen.width / 3));
                 EditorGUILayout.LabelField(new GUIContent("HEX"), GUILayout.Height(14f), GUILayout.Width(30f));
-				EditorGUILayout.SelectableLabel(items[i].GetHex(), GUILayout.Height(14f), GUILayout.Width(50f));
+				EditorGUILayout.SelectableLabel(items[i].HexString, GUILayout.Height(14f), GUILayout.Width(50f));
                 EditorGUILayout.EndHorizontal();
             }
-            items[i].SetColorAsHex(colors[i]);
+            items[i].HexString = ColorUtil.ConvertRGBtoHEX(colors[i]);
 			GUILayout.FlexibleSpace();
-            if (GUILayout.Button(new GUIContent("C"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
-                itemShowValues[i] = !itemShowValues[i];
+            itemColorSwitch[i] = GUILayout.Toolbar(itemColorSwitch[i], new string[] {"RGB", "HEX"}, GUILayout.Height(15f));
             
             if (GUILayout.Button(new GUIContent("X"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
             {
                 items.RemoveAt(i);
                 itemEditName.RemoveAt(i);
                 colors.RemoveAt(i);
-                itemShowValues.RemoveAt(i);
+                itemColorSwitch.RemoveAt(i);
                 i--;
             }
             EditorGUILayout.EndHorizontal();
@@ -128,7 +127,7 @@ public class LevelColorEditor : EditorWindow {
                 items.Clear();
                 itemEditName.Clear();
                 colors.Clear();
-                itemShowValues.Clear();
+                itemColorSwitch.Clear();
                 XMLFileHandler.saveXMLFile<LevelColorData>(items, filePath, fileName);
             }
         }

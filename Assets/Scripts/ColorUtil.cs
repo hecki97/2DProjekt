@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ColorUtil : MonoBehaviour {
+public class ColorUtil {
 
-	private static float lastH=0f;
+	private static float lastH = 0f;
 
 	public static Color32 getRandomColor () {
 		//float goldenRatio_Conjugate = 0.618033988749895f;   
@@ -61,4 +61,15 @@ public class ColorUtil : MonoBehaviour {
 		}
 		return new UnityEngine.Color32((byte)(255*r),(byte)(255*g),(byte)(255*b),255);
 	}
+
+    public static string ConvertRGBtoHEX(Color32 rgb) {
+        return rgb.r.ToString("X2") + rgb.g.ToString("X2") + rgb.b.ToString("X2");
+    }
+
+    public static Color32 ConvertHEXtoRGB(string hex) {
+        byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+        byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+        byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+        return new Color32(r, g, b, 255);
+    }
 }

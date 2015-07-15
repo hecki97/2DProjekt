@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="Windows-1252"?>
-<ArrayOfItemData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfItemData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ItemData ItemType="Item" Name="" RotationSpeed="0" SpriteSheet="" SpriteSheetIndex="">
+    <scale2D>
+      <x>1</x>
+      <y>1</y>
+      <z>1</z>
+    </scale2D>
+    <scale3D>
+      <x>1</x>
+      <y>1</y>
+      <z>1</z>
+    </scale3D>
+    <offset2D>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </offset2D>
+    <offset3D>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </offset3D>
+    <pointsPerItem>
+      <x>0</x>
+      <y>0</y>
+    </pointsPerItem>
+  </ItemData>
+</ArrayOfItemData>

@@ -9,10 +9,10 @@ public class PlayerStatsEditor : EditorWindow {
     private static readonly string filePath = Application.dataPath + "/Resources/XML/";
     private static readonly string fileName = "playerStats.xml";
 
-    private static List<PlayerStatsData> l_psd = new List<PlayerStatsData>();
-    //private static List<bool> itemEditValues = new List<bool>();
+    private static List<PlayerStatsData> playerStats = new List<PlayerStatsData>();
     private static List<bool> itemFoldouts = new List<bool>();
 
+    private static List<int> itemLockSwitch = new List<int>();
     private Vector2 scrollPosition;
 
     [MenuItem("Game Data/Player Stats Editor")]
@@ -24,20 +24,19 @@ public class PlayerStatsEditor : EditorWindow {
 
 	void OnFocus()
 	{
-		if (l_psd.Count <= 0)
+        if (playerStats.Count <= 0)
 			loadXMLFile ();
 	}
 
 	void OnLostFocus()
 	{
-		if (l_psd.Count > 0)
-			XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+        if (playerStats.Count > 0)
+            XMLFileHandler.saveXMLFile<PlayerStatsData>(playerStats, filePath, fileName);
 	}
 
     private static void loadXMLFile()
     {
-		l_psd.Clear ();
-        //itemEditValues.Clear();
+        playerStats.Clear();
 		itemFoldouts.Clear ();
         if (File.Exists(filePath + fileName))
         {
@@ -47,14 +46,9 @@ public class PlayerStatsEditor : EditorWindow {
             {
                 try
                 {
-                    l_psd = (List<PlayerStatsData>)serializer.Deserialize(file);
-                    //itemFoldouts = new List<bool>(l_psd.Count);
-
-                    for (int i = 0; i < l_psd.Count; i++)
-                    {
+                    playerStats = (List<PlayerStatsData>)serializer.Deserialize(file);
+                    for (int i = 0; i < playerStats.Count; i++)
                         itemFoldouts.Add(false);
-                        //itemEditValues.Add(true);
-                    }
                 }
                 catch (System.Exception e)
                 {
@@ -67,13 +61,12 @@ public class PlayerStatsEditor : EditorWindow {
     private void OnGUI()
     {
         if (GUILayout.Button(new GUIContent("Save Player Stats!")))
-            XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+            XMLFileHandler.saveXMLFile<PlayerStatsData>(playerStats, filePath, fileName);
 
 		EditorGUILayout.BeginHorizontal();
 		if (GUILayout.Button(new GUIContent("Add Player Stats!")))
 		{
-			l_psd.Add(new PlayerStatsData());
-            //itemEditValues.Add(true);
+            playerStats.Add(new PlayerStatsData());
 			itemFoldouts.Add(false);
 		}
 		if (GUILayout.Button(new GUIContent("Load Item List!")))
@@ -81,31 +74,31 @@ public class PlayerStatsEditor : EditorWindow {
 		EditorGUILayout.EndHorizontal();
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-        for (int i = 0; i < l_psd.Count; i++)
+        for (int i = 0; i < playerStats.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
-            itemFoldouts[i] = EditorGUILayout.Foldout(itemFoldouts[i], new GUIContent("Player Stats (" + l_psd[i].difficulty + ")"));
+            itemFoldouts[i] = EditorGUILayout.Foldout(itemFoldouts[i], new GUIContent("Player Stats (" + playerStats[i].difficulty + ")"));
             GUILayout.FlexibleSpace();
-            if (!l_psd[i].unlocked)
-                EditorGUILayout.LabelField("(Locked)", GUILayout.Width(55f));
+            playerStats[i].unlocked = GUILayout.Toolbar(playerStats[i].unlocked, new string[] { "U", "L" }, GUILayout.Height(15f));
             if (GUILayout.Button(new GUIContent("X"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
             {
-                l_psd.RemoveAt(i);
+                if (playerStats[i].unlocked == 1 && !EditorUtility.DisplayDialog("Warning!", "Do you really want to clear the whole List?", "Yes!", "No!")) return;
+                playerStats.RemoveAt(i);
                 itemFoldouts.RemoveAt(i);
                 i--;
             }
             EditorGUILayout.EndHorizontal();
             if (itemFoldouts[i])
             {
-                l_psd[i].unlocked = EditorGUILayout.BeginToggleGroup("Unlocked Content", l_psd[i].unlocked);
-                l_psd[i].difficulty = (Difficulty) EditorGUILayout.EnumPopup(new GUIContent("Difficulty"), l_psd[i].difficulty);
-                l_psd[i].playerCoinsCount = EditorGUILayout.IntField(new GUIContent("Coins:"), l_psd[i].playerCoinsCount);
-                l_psd[i].playerDamageCount = EditorGUILayout.FloatField(new GUIContent("Damage Count:"), l_psd[i].playerDamageCount);
-                l_psd[i].playerFoodPoints = EditorGUILayout.IntField(new GUIContent("Food Points:"), l_psd[i].playerFoodPoints);
-                l_psd[i].playerMaxFoodPoints = EditorGUILayout.IntField(new GUIContent("Max Food Points:"), l_psd[i].playerMaxFoodPoints);
-                l_psd[i].playerHealthPoints = EditorGUILayout.IntField(new GUIContent("Health Points:"), l_psd[i].playerHealthPoints);
-                l_psd[i].playerMaxHealthPoints = EditorGUILayout.IntField(new GUIContent("Max Health Points:"), l_psd[i].playerMaxHealthPoints);
-                EditorGUILayout.EndToggleGroup();
+                EditorGUI.BeginDisabledGroup(playerStats[i].unlocked == 1);
+                playerStats[i].difficulty = (Difficulty)EditorGUILayout.EnumPopup(new GUIContent("Difficulty"), playerStats[i].difficulty);
+                playerStats[i].playerCoinsCount = EditorGUILayout.IntField(new GUIContent("Coins:"), playerStats[i].playerCoinsCount);
+                playerStats[i].playerDamageCount = EditorGUILayout.FloatField(new GUIContent("Damage Count:"), playerStats[i].playerDamageCount);
+                playerStats[i].playerFoodPoints = EditorGUILayout.IntField(new GUIContent("Food Points:"), playerStats[i].playerFoodPoints);
+                playerStats[i].playerMaxFoodPoints = EditorGUILayout.IntField(new GUIContent("Max Food Points:"), playerStats[i].playerMaxFoodPoints);
+                playerStats[i].playerHealthPoints = EditorGUILayout.IntField(new GUIContent("Health Points:"), playerStats[i].playerHealthPoints);
+                playerStats[i].playerMaxHealthPoints = EditorGUILayout.IntField(new GUIContent("Max Health Points:"), playerStats[i].playerMaxHealthPoints);
+                EditorGUI.EndDisabledGroup();
             }
         }
         GUILayout.EndScrollView();
@@ -113,16 +106,15 @@ public class PlayerStatsEditor : EditorWindow {
 		{
 			if (EditorUtility.DisplayDialog("Warning!", "Do you really want to clear the whole List?", "Yes!", "No!"))
 			{
-				l_psd.Clear();
-                //itemEditValues.Clear();
+                playerStats.Clear();
 				itemFoldouts.Clear();
-				XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+                XMLFileHandler.saveXMLFile<PlayerStatsData>(playerStats, filePath, fileName);
 			}
 		}
     }
 
     private void OnDestroy()
     {
-        XMLFileHandler.saveXMLFile<PlayerStatsData>(l_psd, filePath, fileName);
+        XMLFileHandler.saveXMLFile<PlayerStatsData>(playerStats, filePath, fileName);
     }
 }

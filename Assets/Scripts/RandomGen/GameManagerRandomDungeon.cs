@@ -140,7 +140,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
         }
         colorStart = ColorUtil.getRandomColor();
         colorEnd = ColorUtil.getRandomColor();
-        levelColor = colors[Random.Range(0, colors.Count)].GetColor32();
+        levelColor = ColorUtil.ConvertHEXtoRGB(colors[Random.Range(0, colors.Count)].HexString);
         mat.color = levelColor;
 
 		levelText.text = "Level " + level;
@@ -159,7 +159,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
 
     public void GetRandomLvlColor()
     {
-        mat.color = colors[Random.Range(0, colors.Count)].GetColor32();
+        mat.color = ColorUtil.ConvertHEXtoRGB(colors[Random.Range(0, colors.Count)].HexString);
     }
 
 	// Update is called once per frame

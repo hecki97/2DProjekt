@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <ArrayOfPlayerStatsData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PlayerStatsData>
-    <difficulty>Hard</difficulty>
-    <unlocked>false</unlocked>
+    <difficulty>Dev</difficulty>
+    <unlocked>1</unlocked>
+    <playerCoinsCount>999</playerCoinsCount>
+    <playerFoodPoints>999</playerFoodPoints>
+    <playerMaxFoodPoints>999</playerMaxFoodPoints>
+    <playerHealthPoints>999</playerHealthPoints>
+    <playerMaxHealthPoints>999</playerMaxHealthPoints>
+    <playerDamageCount>1</playerDamageCount>
+  </PlayerStatsData>
+  <PlayerStatsData>
+    <difficulty>Easy</difficulty>
+    <unlocked>1</unlocked>
     <playerCoinsCount>0</playerCoinsCount>
-    <playerFoodPoints>75</playerFoodPoints>
-    <playerMaxFoodPoints>75</playerMaxFoodPoints>
-    <playerHealthPoints>1</playerHealthPoints>
-    <playerMaxHealthPoints>1</playerMaxHealthPoints>
+    <playerFoodPoints>250</playerFoodPoints>
+    <playerMaxFoodPoints>250</playerMaxFoodPoints>
+    <playerHealthPoints>5</playerHealthPoints>
+    <playerMaxHealthPoints>5</playerMaxHealthPoints>
     <playerDamageCount>1</playerDamageCount>
   </PlayerStatsData>
   <PlayerStatsData>
     <difficulty>Normal</difficulty>
-    <unlocked>true</unlocked>
+    <unlocked>0</unlocked>
     <playerCoinsCount>0</playerCoinsCount>
     <playerFoodPoints>100</playerFoodPoints>
     <playerMaxFoodPoints>100</playerMaxFoodPoints>
@@ -21,23 +31,13 @@
     <playerDamageCount>1</playerDamageCount>
   </PlayerStatsData>
   <PlayerStatsData>
-    <difficulty>Easy</difficulty>
-    <unlocked>false</unlocked>
+    <difficulty>Hard</difficulty>
+    <unlocked>1</unlocked>
     <playerCoinsCount>0</playerCoinsCount>
-    <playerFoodPoints>150</playerFoodPoints>
-    <playerMaxFoodPoints>150</playerMaxFoodPoints>
-    <playerHealthPoints>5</playerHealthPoints>
-    <playerMaxHealthPoints>5</playerMaxHealthPoints>
-    <playerDamageCount>1</playerDamageCount>
-  </PlayerStatsData>
-  <PlayerStatsData>
-    <difficulty>Dev</difficulty>
-    <unlocked>false</unlocked>
-    <playerCoinsCount>999</playerCoinsCount>
-    <playerFoodPoints>500</playerFoodPoints>
-    <playerMaxFoodPoints>500</playerMaxFoodPoints>
-    <playerHealthPoints>500</playerHealthPoints>
-    <playerMaxHealthPoints>500</playerMaxHealthPoints>
+    <playerFoodPoints>50</playerFoodPoints>
+    <playerMaxFoodPoints>50</playerMaxFoodPoints>
+    <playerHealthPoints>1</playerHealthPoints>
+    <playerMaxHealthPoints>1</playerMaxHealthPoints>
     <playerDamageCount>1</playerDamageCount>
   </PlayerStatsData>
 </ArrayOfPlayerStatsData>
