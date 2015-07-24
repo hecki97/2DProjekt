@@ -10,7 +10,7 @@ public class ItemCoinPickupBehaviour : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            GameManager.instance.coinsCount++;
+            PlayerStatsManager.instance.playerStats.CoinCount++;
             SoundManager.instance.RandomizePickupSfx(pickupSound1, pickupSound2);
             this.gameObject.SetActive(false);
         }

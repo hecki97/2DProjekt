@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             XMLFileHandler.DeserializeXMLFile<LevelColorData>(levelColorXMLFile, out colors);
-            PlayerStatsManager.instance.LoadPlayerStatsFromXML();
+//            PlayerStatsManager.instance.LoadPlayerStatsFromXML();
         }
         else if (instance != this)
             Destroy(gameObject);
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
 	public void GameOver ()
 	{
-        float score = Mathf.RoundToInt((PlayerStatsManager.instance.FoodPoints * 50 + PlayerStatsManager.instance.MaxFoodPoints * 100 + PlayerStatsManager.instance.HealthPoints * 50 + PlayerStatsManager.instance.MaxHealthPoints * 100 + PlayerStatsManager.instance.CoinCount * 100) * level - Mathf.PI * (time / stepCount));
+        float score = Mathf.RoundToInt((PlayerStatsManager.instance.playerStats.FoodPoints * 50 + PlayerStatsManager.instance.playerStats.MaxFoodPoints * 100 + PlayerStatsManager.instance.playerStats.HealthPoints * 50 + PlayerStatsManager.instance.playerStats.MaxHealthPoints * 100 + PlayerStatsManager.instance.playerStats.CoinCount * 100) * level - Mathf.PI * (time / stepCount));
 		levelText.text = "After " + level + " levels, you died. \n Score: " + score / 1000;
 		levelImage.gameObject.SetActive (true);
 		enabled = false;

@@ -22,14 +22,14 @@ public class ItemGenericCollider : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
+        InputEventHandler.OnTriggerDubstepMode += InputEventHandler_OnTriggerDubstepMode;
         XMLFileHandler.DeserializeXMLFile<ItemData>(itemDataXMLFile, out items);
         LoadRandomItem();
 	}
 
     void OnDisable()
     {
-        SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
+        InputEventHandler.OnTriggerDubstepMode -= InputEventHandler_OnTriggerDubstepMode;
     }
 
     // Update is called once per frame
@@ -69,7 +69,7 @@ public class ItemGenericCollider : MonoBehaviour {
 //        transform.position = (GameManager.instance.gameMode == GameMode.TwoD) ? (transform.position + offset2D) : (transform.position + offset3D);
     }
 
-    void SecretEventHandler_OnTrigger()
+    void InputEventHandler_OnTriggerDubstepMode()
     {
         if (speed != 750)
         {
@@ -82,11 +82,11 @@ public class ItemGenericCollider : MonoBehaviour {
 
     void AddFoodPoints(int _float)
     {
-        int tmp_foodPoints = GameManager.instance.foodPoints + _float;
-        if (tmp_foodPoints < GameManager.instance.maxFoodPoints)
-            GameManager.instance.foodPoints = tmp_foodPoints;
+        int tmp_foodPoints = PlayerStatsManager.instance.playerStats.FoodPoints + _float;
+        if (tmp_foodPoints < PlayerStatsManager.instance.playerStats.MaxFoodPoints)
+            PlayerStatsManager.instance.playerStats.FoodPoints = tmp_foodPoints;
         else
-            GameManager.instance.foodPoints = GameManager.instance.maxFoodPoints;
+            PlayerStatsManager.instance.playerStats.FoodPoints = PlayerStatsManager.instance.playerStats.MaxFoodPoints;
     }
 
     void OnTriggerEnter2D(Collider2D other)

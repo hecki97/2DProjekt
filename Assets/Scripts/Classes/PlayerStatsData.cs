@@ -5,14 +5,23 @@ public class PlayerStatsData {
 
 	//Player Stats
     public Difficulty difficulty = Difficulty.Normal;
-    //public int unlocked = 0;
-    protected int coinCount = 0;
-	protected int foodPoints = 100;
-    protected int maxFoodPoints = 100;
-    protected int healthPoints = 3;
-    protected int maxHealthPoints = 3;
+    public int unlocked = 0;
+    protected int coinCount;
+    protected int foodPoints;
+    protected int maxFoodPoints;
+    protected int healthPoints;
+    protected int maxHealthPoints;
 	protected float damageCount = 1f;
     
+    public PlayerStatsData()
+    {
+        coinCount = 0;
+        foodPoints = 100;
+        maxFoodPoints = 100;
+        healthPoints = 3;
+        maxHealthPoints = 3;
+    }
+
     public PlayerStatsData(int coinCount, int foodPoints, int maxFoodPoints, int healthPoints, int maxHealthPoints) {
         this.coinCount = coinCount;
         this.foodPoints = foodPoints;
@@ -21,6 +30,20 @@ public class PlayerStatsData {
         this.maxHealthPoints = maxHealthPoints;
     }
     
+    public void SetPlayerStats(int coinCount, int foodPoints, int maxFoodPoints, int healthPoints, int maxHealthPoints)
+    {
+        this.coinCount = coinCount;
+        this.foodPoints = foodPoints;
+        this.maxFoodPoints = maxFoodPoints;
+        this.healthPoints = healthPoints;
+        this.maxHealthPoints = maxHealthPoints;
+    }
+
+    public PlayerStatsData GetPlayerStats()
+    {
+        return new PlayerStatsData(CoinCount, FoodPoints, MaxFoodPoints, HealthPoints, MaxHealthPoints);
+    }
+
     public int CoinCount {
         get { return coinCount; }
         set { coinCount = value; }

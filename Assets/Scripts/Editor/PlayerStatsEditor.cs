@@ -92,12 +92,12 @@ public class PlayerStatsEditor : EditorWindow {
             {
                 EditorGUI.BeginDisabledGroup(playerStats[i].unlocked == 1);
                 playerStats[i].difficulty = (Difficulty)EditorGUILayout.EnumPopup(new GUIContent("Difficulty"), playerStats[i].difficulty);
-                playerStats[i].playerCoinsCount = EditorGUILayout.IntField(new GUIContent("Coins:"), playerStats[i].playerCoinsCount);
-                playerStats[i].playerDamageCount = EditorGUILayout.FloatField(new GUIContent("Damage Count:"), playerStats[i].playerDamageCount);
-                playerStats[i].playerFoodPoints = EditorGUILayout.IntField(new GUIContent("Food Points:"), playerStats[i].playerFoodPoints);
-                playerStats[i].playerMaxFoodPoints = EditorGUILayout.IntField(new GUIContent("Max Food Points:"), playerStats[i].playerMaxFoodPoints);
-                playerStats[i].playerHealthPoints = EditorGUILayout.IntField(new GUIContent("Health Points:"), playerStats[i].playerHealthPoints);
-                playerStats[i].playerMaxHealthPoints = EditorGUILayout.IntField(new GUIContent("Max Health Points:"), playerStats[i].playerMaxHealthPoints);
+                playerStats[i].CoinCount = EditorGUILayout.IntField(new GUIContent("Coins:"), playerStats[i].CoinCount);
+                //playerStats[i].playerDamageCount = EditorGUILayout.FloatField(new GUIContent("Damage Count:"), playerStats[i].DamageCount);
+                playerStats[i].FoodPoints = EditorGUILayout.IntField(new GUIContent("Food Points:"), playerStats[i].FoodPoints);
+                playerStats[i].MaxFoodPoints = EditorGUILayout.IntField(new GUIContent("Max Food Points:"), playerStats[i].MaxFoodPoints);
+                playerStats[i].HealthPoints = EditorGUILayout.IntField(new GUIContent("Health Points:"), playerStats[i].HealthPoints);
+                playerStats[i].MaxHealthPoints = EditorGUILayout.IntField(new GUIContent("Max Health Points:"), playerStats[i].MaxHealthPoints);
                 EditorGUI.EndDisabledGroup();
             }
         }

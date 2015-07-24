@@ -8,18 +8,18 @@ public class RotatorScript : MonoBehaviour {
 
     void Start()
     {
-        SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
+        InputEventHandler.OnTriggerDubstepMode += InputEventHandler_OnTriggerDubstepMode;
 
         if (FXManager.instance.bloomIsActive)
-            SecretEventHandler_OnTrigger();
+            InputEventHandler_OnTriggerDubstepMode();
     }
 
     void OnDisable()
     {
-        SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
+        InputEventHandler.OnTriggerDubstepMode -= InputEventHandler_OnTriggerDubstepMode;
     }
 
-    void SecretEventHandler_OnTrigger()
+    void InputEventHandler_OnTriggerDubstepMode()
     {
         if (speed != 750)
         {

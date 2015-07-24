@@ -67,12 +67,12 @@ public class GameManagerRandomDungeon : MonoBehaviour {
             instance = this;
             XMLFileHandler.DeserializeXMLFile<LevelColorData>(levelColorXMLFile, out colors);
             XMLFileHandler.DeserializeXMLFile<PlayerStatsData>(playerStatsXMLFile, out playerStats);
-            LoadDefaultPlayerStats();
+            //LoadDefaultPlayerStats();
         }
         else if (instance != this)
             Destroy(gameObject);
 
-        SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
+        //SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
 
 		DontDestroyOnLoad (gameObject);
 		enemies = new List<Enemy>();
@@ -82,7 +82,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
 
     void OnDisable()
     {
-        SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
+        //SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
     }
 
     private void SecretEventHandler_OnTrigger()
@@ -90,7 +90,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
         secretModeActive = !secretModeActive;
 
         if (secretModeActive)
-            SoundManager.instance.musicSource.clip = SoundManager.instance.secretBGM;
+            SoundManager.instance.musicSource.clip = SoundManager.instance.dubstepBGM;
         else
         {
             SoundManager.instance.musicSource.clip = SoundManager.instance.mainBGM;
@@ -100,6 +100,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
         SoundManager.instance.musicSource.Play();
     }
 
+    /*
     public void LoadDefaultPlayerStats()
     {
         for (int i = 0; i < playerStats.Count; i++)
@@ -115,6 +116,7 @@ public class GameManagerRandomDungeon : MonoBehaviour {
             }
         }
     }
+    */ 
 
     void OnLevelWasLoaded()
     {

@@ -43,9 +43,9 @@ public class IngameUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        coinText.text = "x " + PlayerStatsManager.instance.CoinCount;
-        healthText.text = PlayerStatsManager.instance.HealthPoints + "/" + PlayerStatsManager.instance.MaxHealthPoints;
-        foodText.text = PlayerStatsManager.instance.FoodPoints + "/" + PlayerStatsManager.instance.MaxFoodPoints;
+        coinText.text = "x " + PlayerStatsManager.instance.playerStats.CoinCount.ToString("000");
+        healthText.text = PlayerStatsManager.instance.playerStats.HealthPoints.ToString("000") + "/" + PlayerStatsManager.instance.playerStats.MaxHealthPoints.ToString("000");
+        foodText.text = PlayerStatsManager.instance.playerStats.FoodPoints.ToString("000") + "/" + PlayerStatsManager.instance.playerStats.MaxFoodPoints.ToString("000");
 
         buttonPauseMenu.interactable = !GameManager.instance.isPaused;
 	}

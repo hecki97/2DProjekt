@@ -64,28 +64,21 @@ public class ShopGUIController : MonoBehaviour {
         UpdatePlayerStats();
     }
 
-    /*
     public void SetPlayerStats()
     {
-        playerStats = PlayerStatsManager.instance.PlayerStats();
-        playerStats.CoinCount = GameManager.instance.coinsCount;
-        playerStats.SetFoodPoints(GameManager.instance.foodPoints);
-        playerStats.SetMaxFoodPoints(GameManager.instance.maxFoodPoints);
-        playerStats.SetHealthPoints(GameManager.instance.healthPoints);
-        playerStats.SetMaxHealthPoints(GameManager.instance.maxHealthPoints);
+        playerStats = PlayerStatsManager.instance.playerStats;
     }
-    */
 
     void UpdateButtons()
     {
-        b_refillFoodPoints.interactable = (PlayerStatsManager.instance.CoinCount <= 0 || PlayerStatsManager.instance.FoodPoints >= PlayerStatsManager.instance.MaxFoodPoints) ? false : true;
-        b_refillHealthPoints.interactable = (PlayerStatsManager.instance.CoinCount <= 0 || PlayerStatsManager.instance.HealthPoints >= PlayerStatsManager.instance.MaxHealthPoints) ? false : true;
-        b_buy.interactable = (PlayerStatsManager.instance.CoinCount == playerStats.CoinCount) ? false : true;
-        b_decreaseMaxHealth.interactable = (PlayerStatsManager.instance.MaxHealthPoints <= playerStats.MaxHealthPoints || PlayerStatsManager.instance.HealthPoints >= PlayerStatsManager.instance.MaxHealthPoints) ? false : true;
-        b_increaseMaxHealth.interactable = (PlayerStatsManager.instance.MaxHealthPoints >= maxMaxHealthPoints || PlayerStatsManager.instance.CoinCount < 25) ? false : true;
-        b_decreaseMaxFood.interactable = (PlayerStatsManager.instance.MaxFoodPoints <= playerStats.MaxFoodPoints || PlayerStatsManager.instance.FoodPoints >= PlayerStatsManager.instance.MaxFoodPoints) ? false : true;
-        b_increaseMaxFood.interactable = (PlayerStatsManager.instance.MaxFoodPoints >= maxMaxFoodPoints || PlayerStatsManager.instance.CoinCount < 25) ? false : true;
-        b_returnToLevel.interactable = (PlayerStatsManager.instance.CoinCount == playerStats.CoinCount) ? true : false;
+        b_refillFoodPoints.interactable = (PlayerStatsManager.instance.playerStats.CoinCount <= 0 || PlayerStatsManager.instance.playerStats.FoodPoints >= PlayerStatsManager.instance.playerStats.MaxFoodPoints) ? false : true;
+        b_refillHealthPoints.interactable = (PlayerStatsManager.instance.playerStats.CoinCount <= 0 || PlayerStatsManager.instance.playerStats.HealthPoints >= PlayerStatsManager.instance.playerStats.MaxHealthPoints) ? false : true;
+        b_buy.interactable = (PlayerStatsManager.instance.playerStats.CoinCount == playerStats.CoinCount) ? false : true;
+        b_decreaseMaxHealth.interactable = (PlayerStatsManager.instance.playerStats.MaxHealthPoints <= playerStats.MaxHealthPoints || PlayerStatsManager.instance.playerStats.HealthPoints >= PlayerStatsManager.instance.playerStats.MaxHealthPoints) ? false : true;
+        b_increaseMaxHealth.interactable = (PlayerStatsManager.instance.playerStats.MaxHealthPoints >= maxMaxHealthPoints || PlayerStatsManager.instance.playerStats.CoinCount < 25) ? false : true;
+        b_decreaseMaxFood.interactable = (PlayerStatsManager.instance.playerStats.MaxFoodPoints <= playerStats.MaxFoodPoints || PlayerStatsManager.instance.playerStats.FoodPoints >= PlayerStatsManager.instance.playerStats.MaxFoodPoints) ? false : true;
+        b_increaseMaxFood.interactable = (PlayerStatsManager.instance.playerStats.MaxFoodPoints >= maxMaxFoodPoints || PlayerStatsManager.instance.playerStats.CoinCount < 25) ? false : true;
+        b_returnToLevel.interactable = (PlayerStatsManager.instance.playerStats.CoinCount == playerStats.CoinCount) ? true : false;
     }
 
     public void OnClick(string function)
@@ -95,85 +88,85 @@ public class ShopGUIController : MonoBehaviour {
 
     void UpdatePlayerStats()
     {
-        t_coin.text = string.Format("x {0}", GameManager.instance.coinsCount.ToString("000"));
-        t_refillFood.text = string.Format("{0}/{1}", GameManager.instance.foodPoints.ToString("000"), GameManager.instance.maxFoodPoints.ToString("000"));
-        t_refillHealth.text = string.Format("{0}/{1}", GameManager.instance.healthPoints.ToString("000"), GameManager.instance.maxHealthPoints.ToString("000"));
-        t_upgrMaxFood.text = string.Format("Max. {0}", GameManager.instance.maxFoodPoints);
-        t_upgrMaxHealth.text = string.Format("Max. {0}", GameManager.instance.maxHealthPoints);
+        t_coin.text = string.Format("x {0}", PlayerStatsManager.instance.playerStats.CoinCount.ToString("000"));
+        t_refillFood.text = string.Format("{0}/{1}", PlayerStatsManager.instance.playerStats.FoodPoints.ToString("000"), PlayerStatsManager.instance.playerStats.MaxFoodPoints.ToString("000"));
+        t_refillHealth.text = string.Format("{0}/{1}", PlayerStatsManager.instance.playerStats.HealthPoints.ToString("000"), PlayerStatsManager.instance.playerStats.MaxHealthPoints.ToString("000"));
+        t_upgrMaxFood.text = string.Format("Max. {0}", PlayerStatsManager.instance.playerStats.MaxFoodPoints);
+        t_upgrMaxHealth.text = string.Format("Max. {0}", PlayerStatsManager.instance.playerStats.MaxHealthPoints);
 
-        refillCostFoodPoints = Mathf.RoundToInt((GameManager.instance.maxFoodPoints - GameManager.instance.foodPoints) / Mathf.PI);
-        foodPointsByCoins = Mathf.RoundToInt(GameManager.instance.coinsCount * Mathf.PI);
-        refillCostHealthPoints = (GameManager.instance.maxHealthPoints - GameManager.instance.healthPoints) * 5;
-        healthPointsByCoins = Mathf.RoundToInt(GameManager.instance.coinsCount / 5);
+        refillCostFoodPoints = Mathf.RoundToInt((PlayerStatsManager.instance.playerStats.MaxFoodPoints - PlayerStatsManager.instance.playerStats.FoodPoints) / Mathf.PI);
+        foodPointsByCoins = Mathf.RoundToInt(PlayerStatsManager.instance.playerStats.CoinCount * Mathf.PI);
+        refillCostHealthPoints = (PlayerStatsManager.instance.playerStats.MaxHealthPoints - PlayerStatsManager.instance.playerStats.HealthPoints) * 5;
+        healthPointsByCoins = Mathf.RoundToInt(PlayerStatsManager.instance.playerStats.CoinCount / 5);
 
-        t_refillFoodPoints.text = (GameManager.instance.coinsCount >= refillCostFoodPoints) ? ("ALL (" + refillCostFoodPoints.ToString("000") + "G)") : ("RFL (" + foodPointsByCoins.ToString("000") + "P)");
-        t_refillFoodPoints.text = (GameManager.instance.foodPoints >= GameManager.instance.maxFoodPoints) ? "FULL" : t_refillFoodPoints.text;
-        t_refillHealthPoints.text = (GameManager.instance.coinsCount >= refillCostHealthPoints) ? ("ALL (" + refillCostHealthPoints.ToString("000") + "G)") : ("RFL (" + healthPointsByCoins.ToString("000") + "P)");
-        t_refillHealthPoints.text = (GameManager.instance.healthPoints >= GameManager.instance.maxHealthPoints) ? "FULL" : t_refillHealthPoints.text;
-        t_cancel.text = (GameManager.instance.coinsCount == playerStats.playerCoinsCount) ? "Switch Level" : "Revert Purchase";
+        t_refillFoodPoints.text = (PlayerStatsManager.instance.playerStats.CoinCount >= refillCostFoodPoints) ? ("ALL (" + refillCostFoodPoints.ToString("000") + "G)") : ("RFL (" + foodPointsByCoins.ToString("000") + "P)");
+        t_refillFoodPoints.text = (PlayerStatsManager.instance.playerStats.FoodPoints >= PlayerStatsManager.instance.playerStats.MaxFoodPoints) ? "FULL" : t_refillFoodPoints.text;
+        t_refillHealthPoints.text = (PlayerStatsManager.instance.playerStats.CoinCount >= refillCostHealthPoints) ? ("ALL (" + refillCostHealthPoints.ToString("000") + "G)") : ("RFL (" + healthPointsByCoins.ToString("000") + "P)");
+        t_refillHealthPoints.text = (PlayerStatsManager.instance.playerStats.HealthPoints >= PlayerStatsManager.instance.playerStats.MaxHealthPoints) ? "FULL" : t_refillHealthPoints.text;
+        t_cancel.text = (PlayerStatsManager.instance.playerStats.CoinCount == playerStats.CoinCount) ? "Switch Level" : "Revert Purchase";
     }
 
     void IncreaseMaxFood()
     {
-        if (GameManager.instance.coinsCount >= 25 && GameManager.instance.maxFoodPoints < maxMaxFoodPoints)
+        if (PlayerStatsManager.instance.playerStats.CoinCount >= 25 && PlayerStatsManager.instance.playerStats.MaxFoodPoints < maxMaxFoodPoints)
         {
-            GameManager.instance.coinsCount -= 25;
-            GameManager.instance.maxFoodPoints = (GameManager.instance.maxFoodPoints >= maxMaxFoodPoints) ? maxMaxFoodPoints : (GameManager.instance.maxFoodPoints += 50);
+            PlayerStatsManager.instance.playerStats.CoinCount -= 25;
+            PlayerStatsManager.instance.playerStats.MaxFoodPoints = (PlayerStatsManager.instance.playerStats.MaxFoodPoints >= maxMaxFoodPoints) ? maxMaxFoodPoints : (PlayerStatsManager.instance.playerStats.MaxFoodPoints += 50);
         }
     }
 
     void DecreaseMaxFood()
     {
-        if (GameManager.instance.maxFoodPoints > playerStats.GetMaxFoodPoints())
+        if (PlayerStatsManager.instance.playerStats.MaxFoodPoints > playerStats.FoodPoints)
         {
-            GameManager.instance.coinsCount += 25;
-            GameManager.instance.maxFoodPoints = (GameManager.instance.maxFoodPoints > playerStats.GetMaxFoodPoints()) ? (GameManager.instance.maxFoodPoints -= 50) : playerStats.GetMaxFoodPoints();
+            PlayerStatsManager.instance.playerStats.CoinCount += 25;
+            PlayerStatsManager.instance.playerStats.MaxFoodPoints = (PlayerStatsManager.instance.playerStats.MaxFoodPoints > playerStats.MaxFoodPoints) ? (PlayerStatsManager.instance.playerStats.MaxFoodPoints -= 50) : playerStats.MaxFoodPoints;
         }
     }
 
     void IncreaseMaxHealth()
     {
-        if (GameManager.instance.coinsCount >= 25 && GameManager.instance.maxHealthPoints < maxMaxHealthPoints)
+        if (PlayerStatsManager.instance.playerStats.CoinCount >= 25 && PlayerStatsManager.instance.playerStats.MaxHealthPoints < maxMaxHealthPoints)
         {
-            GameManager.instance.coinsCount -= 25;
-            GameManager.instance.maxHealthPoints = (GameManager.instance.maxHealthPoints >= maxMaxHealthPoints) ? maxMaxHealthPoints : (GameManager.instance.maxHealthPoints += 1);
+            PlayerStatsManager.instance.playerStats.CoinCount -= 25;
+            PlayerStatsManager.instance.playerStats.MaxHealthPoints = (PlayerStatsManager.instance.playerStats.MaxHealthPoints >= maxMaxHealthPoints) ? maxMaxHealthPoints : (PlayerStatsManager.instance.playerStats.MaxHealthPoints += 1);
         }
     }
 
     void DecreaseMaxHealth()
     {
-        if (GameManager.instance.maxHealthPoints > playerStats.GetMaxHealthPoints())
+        if (PlayerStatsManager.instance.playerStats.MaxHealthPoints > playerStats.MaxHealthPoints)
         {
-            GameManager.instance.coinsCount += 25;
-            GameManager.instance.maxHealthPoints = (GameManager.instance.maxHealthPoints > playerStats.GetMaxHealthPoints()) ? (GameManager.instance.maxHealthPoints -= 1) : playerStats.GetMaxHealthPoints();
+            PlayerStatsManager.instance.playerStats.CoinCount += 25;
+            PlayerStatsManager.instance.playerStats.MaxHealthPoints = (PlayerStatsManager.instance.playerStats.MaxHealthPoints > playerStats.MaxHealthPoints) ? (PlayerStatsManager.instance.playerStats.MaxHealthPoints -= 1) : playerStats.MaxHealthPoints;
         }
     }
 
     void RefillHealthPoints()
     {
-        if (GameManager.instance.coinsCount >= refillCostHealthPoints && GameManager.instance.healthPoints < GameManager.instance.maxHealthPoints)
+        if (PlayerStatsManager.instance.playerStats.CoinCount >= refillCostHealthPoints && PlayerStatsManager.instance.playerStats.HealthPoints < PlayerStatsManager.instance.playerStats.MaxHealthPoints)
         {
-            GameManager.instance.coinsCount -= refillCostHealthPoints;
-            GameManager.instance.healthPoints = GameManager.instance.maxHealthPoints;
+            PlayerStatsManager.instance.playerStats.CoinCount -= refillCostHealthPoints;
+            PlayerStatsManager.instance.playerStats.HealthPoints = PlayerStatsManager.instance.playerStats.MaxHealthPoints;
         }
-        else if (GameManager.instance.coinsCount >= 5 && GameManager.instance.healthPoints < GameManager.instance.maxHealthPoints)
+        else if (PlayerStatsManager.instance.playerStats.CoinCount >= 5 && PlayerStatsManager.instance.playerStats.HealthPoints < PlayerStatsManager.instance.playerStats.MaxHealthPoints)
         {
-            GameManager.instance.healthPoints += healthPointsByCoins;
-            GameManager.instance.coinsCount = 0;
+            PlayerStatsManager.instance.playerStats.HealthPoints += healthPointsByCoins;
+            PlayerStatsManager.instance.playerStats.CoinCount = 0;
         }
     }
 
     void RefillFoodPoints()
     {
-        if (GameManager.instance.coinsCount >= refillCostFoodPoints && GameManager.instance.foodPoints < GameManager.instance.maxFoodPoints)
+        if (PlayerStatsManager.instance.playerStats.CoinCount >= refillCostFoodPoints && PlayerStatsManager.instance.playerStats.FoodPoints < PlayerStatsManager.instance.playerStats.MaxFoodPoints)
         {
-            GameManager.instance.coinsCount -= refillCostFoodPoints;
-            GameManager.instance.foodPoints = GameManager.instance.maxFoodPoints;
+            PlayerStatsManager.instance.playerStats.CoinCount -= refillCostFoodPoints;
+            PlayerStatsManager.instance.playerStats.FoodPoints = PlayerStatsManager.instance.playerStats.MaxFoodPoints;
         }
-        else if (GameManager.instance.foodPoints < GameManager.instance.maxFoodPoints)
+        else if (PlayerStatsManager.instance.playerStats.FoodPoints < PlayerStatsManager.instance.playerStats.MaxFoodPoints)
         {
-            GameManager.instance.foodPoints += foodPointsByCoins;
-            GameManager.instance.coinsCount = 0;
+            PlayerStatsManager.instance.playerStats.FoodPoints += foodPointsByCoins;
+            PlayerStatsManager.instance.playerStats.CoinCount = 0;
         }
     }
 
@@ -185,15 +178,11 @@ public class ShopGUIController : MonoBehaviour {
 
     public void ButtonCancel()
     {
-        if (playerStats.playerCoinsCount == PlayerStatsManager.instance.CoinCount)
+        if (playerStats.CoinCount == PlayerStatsManager.instance.playerStats.CoinCount)
             ButtonBuy();
         else
         {
-            PlayerStatsManager.instance.list_playerStats = playerStats;
-            PlayerStatsManager.instance.FoodPoints = playerStats.playerFoodPoints;
-            PlayerStatsManager.instance.MaxFoodPoints = playerStats.playerMaxFoodPoints;
-            PlayerStatsManager.instance.HealthPoints = playerStats.playerHealthPoints;
-            PlayerStatsManager.instance.MaxHealthPoints = playerStats.playerMaxHealthPoints;
+            PlayerStatsManager.instance.playerStats = playerStats;
         }
     }
 
