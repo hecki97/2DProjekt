@@ -21,7 +21,7 @@ public class ColorLerp : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	    if (GameManager.instance.secretModeActive)
+	    if (FXManager.instance.bloomIsActive)
         {
             float lerp = Mathf.PingPong(Time.time, duration) / duration;
             renderer.material.color = Color.Lerp(colorStart, colorEnd, lerp);
@@ -29,7 +29,7 @@ public class ColorLerp : MonoBehaviour {
         else
         {
             if (renderer.material.color == GameManager.instance.levelColor) return;
-            renderer.material.color = GameManager.instance.levelColor;
+            renderer.material.color = GameManager.instance.levelColor; 
         }
 	}
 }

@@ -5,16 +5,20 @@ using UnityEngine.Audio;
 public class SoundManager : MonoBehaviour {
 
     public static SoundManager instance = null;
+   
+    // AudioClips
     public AudioClip mainBGM;
-    public AudioClip secretBGM;
+    public AudioClip dubstepBGM;
     
+    // AudioSources
     public AudioSource playerSource;
     public AudioSource efxSource;
     public AudioSource musicSource;
 
+    ///AudioMixerSnapshots
     public AudioMixerSnapshot unpaused;
     public AudioMixerSnapshot paused;
-
+    
     [HideInInspector] public float musicVal = 0;
     [HideInInspector] public float sfxVal = 0;
     [HideInInspector] public bool muted = false;
@@ -30,8 +34,15 @@ public class SoundManager : MonoBehaviour {
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        
+        InputEventHandler.OnTriggerDubstepMode += this.InputEventHandler_OnTriggerDubstepMode;
 	}
-
+    
+    void OnDisable()
+    {
+        InputEventHandler.OnTriggerDubstepMode -= this.InputEventHandler_OnTriggerDubstepMode;
+    }
+    
     public void PlaySingle(AudioClip clip)
     {
         efxSource.clip = clip;
@@ -56,5 +67,11 @@ public class SoundManager : MonoBehaviour {
         playerSource.pitch = randomPitch;
         playerSource.clip = clips[randomIndex];
         playerSource.Play();
+    }
+    
+    private void InputEventHandler_OnTriggerDubstepMode()
+    {
+        musicSource.clip = (musicSource.clip == mainBGM) ? dubstepBGM : mainBGM;
+        musicSource.Play();
     }
 }

@@ -82,7 +82,7 @@ public class PlayerStatsEditor : EditorWindow {
             playerStats[i].unlocked = GUILayout.Toolbar(playerStats[i].unlocked, new string[] { "U", "L" }, GUILayout.Height(15f));
             if (GUILayout.Button(new GUIContent("X"), GUILayout.MaxWidth(20f), GUILayout.Height(15f)))
             {
-                if (playerStats[i].unlocked == 1 && !EditorUtility.DisplayDialog("Warning!", "Do you really want to clear the whole List?", "Yes!", "No!")) return;
+                if (playerStats[i].unlocked == 1 && !EditorUtility.DisplayDialog("Warning!", "Do you really want to remove this Item?", "Yes", "No")) return;
                 playerStats.RemoveAt(i);
                 itemFoldouts.RemoveAt(i);
                 i--;

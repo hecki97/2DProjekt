@@ -15,6 +15,7 @@ public class ShopGUIController : MonoBehaviour {
     private Button b_increaseMaxHealth;
     private Button b_decreaseMaxHealth;
     private Button b_buy;
+    private Button b_returnToLevel;
 
     private Text t_cancel;
     private Text t_coin;
@@ -43,6 +44,7 @@ public class ShopGUIController : MonoBehaviour {
         b_increaseMaxHealth = GameObject.Find("ButtonPlus").GetComponent<Button>();
         b_decreaseMaxHealth = GameObject.Find("ButtonMinus").GetComponent<Button>();
         b_buy = GameObject.Find("ButtonBuy").GetComponent<Button>();
+        b_returnToLevel = GameObject.Find("ButtonReturnToLvl").GetComponent<Button>();
 
         t_cancel = GameObject.Find("ButtonCancel/Text").GetComponent<Text>();
         t_coin = GameObject.Find("CoinText").GetComponent<Text>();
@@ -62,24 +64,28 @@ public class ShopGUIController : MonoBehaviour {
         UpdatePlayerStats();
     }
 
+    /*
     public void SetPlayerStats()
     {
-        playerStats.SetCoinsCount(GameManager.instance.coinsCount);
+        playerStats = PlayerStatsManager.instance.PlayerStats();
+        playerStats.CoinCount = GameManager.instance.coinsCount;
         playerStats.SetFoodPoints(GameManager.instance.foodPoints);
         playerStats.SetMaxFoodPoints(GameManager.instance.maxFoodPoints);
         playerStats.SetHealthPoints(GameManager.instance.healthPoints);
         playerStats.SetMaxHealthPoints(GameManager.instance.maxHealthPoints);
     }
+    */
 
     void UpdateButtons()
     {
-        b_refillFoodPoints.interactable = (GameManager.instance.coinsCount <= 0 || GameManager.instance.foodPoints >= GameManager.instance.maxFoodPoints) ? false : true;
-        b_refillHealthPoints.interactable = (GameManager.instance.coinsCount <= 0 || GameManager.instance.healthPoints >= GameManager.instance.maxHealthPoints) ? false : true;
-        b_buy.interactable = (GameManager.instance.coinsCount == playerStats.playerCoinsCount) ? false : true;
-        b_decreaseMaxHealth.interactable = (GameManager.instance.maxHealthPoints <= playerStats.GetMaxHealthPoints() || GameManager.instance.healthPoints >= GameManager.instance.maxHealthPoints) ? false : true;
-        b_increaseMaxHealth.interactable = (GameManager.instance.maxHealthPoints >= maxMaxHealthPoints || GameManager.instance.coinsCount < 25) ? false : true;
-        b_decreaseMaxFood.interactable = (GameManager.instance.maxFoodPoints <= playerStats.GetMaxFoodPoints() || GameManager.instance.foodPoints >= GameManager.instance.maxFoodPoints) ? false : true;
-        b_increaseMaxFood.interactable = (GameManager.instance.maxFoodPoints >= maxMaxFoodPoints || GameManager.instance.coinsCount < 25) ? false : true;
+        b_refillFoodPoints.interactable = (PlayerStatsManager.instance.CoinCount <= 0 || PlayerStatsManager.instance.FoodPoints >= PlayerStatsManager.instance.MaxFoodPoints) ? false : true;
+        b_refillHealthPoints.interactable = (PlayerStatsManager.instance.CoinCount <= 0 || PlayerStatsManager.instance.HealthPoints >= PlayerStatsManager.instance.MaxHealthPoints) ? false : true;
+        b_buy.interactable = (PlayerStatsManager.instance.CoinCount == playerStats.CoinCount) ? false : true;
+        b_decreaseMaxHealth.interactable = (PlayerStatsManager.instance.MaxHealthPoints <= playerStats.MaxHealthPoints || PlayerStatsManager.instance.HealthPoints >= PlayerStatsManager.instance.MaxHealthPoints) ? false : true;
+        b_increaseMaxHealth.interactable = (PlayerStatsManager.instance.MaxHealthPoints >= maxMaxHealthPoints || PlayerStatsManager.instance.CoinCount < 25) ? false : true;
+        b_decreaseMaxFood.interactable = (PlayerStatsManager.instance.MaxFoodPoints <= playerStats.MaxFoodPoints || PlayerStatsManager.instance.FoodPoints >= PlayerStatsManager.instance.MaxFoodPoints) ? false : true;
+        b_increaseMaxFood.interactable = (PlayerStatsManager.instance.MaxFoodPoints >= maxMaxFoodPoints || PlayerStatsManager.instance.CoinCount < 25) ? false : true;
+        b_returnToLevel.interactable = (PlayerStatsManager.instance.CoinCount == playerStats.CoinCount) ? true : false;
     }
 
     public void OnClick(string function)
@@ -171,24 +177,24 @@ public class ShopGUIController : MonoBehaviour {
         }
     }
 
-    public void ButtonCancel()
-    {
-        if (playerStats.playerCoinsCount == GameManager.instance.coinsCount)
-            ButtonBuy();
-        else
-        {
-            GameManager.instance.coinsCount = playerStats.playerCoinsCount;
-            GameManager.instance.foodPoints = playerStats.playerFoodPoints;
-            GameManager.instance.maxFoodPoints = playerStats.playerMaxFoodPoints;
-            GameManager.instance.healthPoints = playerStats.playerHealthPoints;
-            GameManager.instance.maxHealthPoints = playerStats.playerMaxHealthPoints;
-        }
-    }
-
     void Restart()
     {
         GameManager.instance.level++;
         Application.LoadLevel(Application.loadedLevel);
+    }
+
+    public void ButtonCancel()
+    {
+        if (playerStats.playerCoinsCount == PlayerStatsManager.instance.CoinCount)
+            ButtonBuy();
+        else
+        {
+            PlayerStatsManager.instance.list_playerStats = playerStats;
+            PlayerStatsManager.instance.FoodPoints = playerStats.playerFoodPoints;
+            PlayerStatsManager.instance.MaxFoodPoints = playerStats.playerMaxFoodPoints;
+            PlayerStatsManager.instance.HealthPoints = playerStats.playerHealthPoints;
+            PlayerStatsManager.instance.MaxHealthPoints = playerStats.playerMaxHealthPoints;
+        }
     }
 
     public void ButtonBuy()
@@ -196,5 +202,11 @@ public class ShopGUIController : MonoBehaviour {
         anim.SetTrigger("triggerMenu");
         GameManager.instance.isPaused = false;
         Invoke("Restart", restartLevelDelay);
+    }
+    
+    public void ButtonReturnToLvl()
+    {
+        anim.SetTrigger("triggerMenu");
+        GameManager.instance.isPaused = false;
     }
 }

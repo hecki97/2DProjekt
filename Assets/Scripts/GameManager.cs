@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Xml.Serialization;
 using System.IO;
-using UnityStandardAssets.ImageEffects;
 
 public enum MenuInstance { MainMenu, PauseMenu, OptionsMenu, AudioMenu, GraphicsMenu };
 public class GameManager : MonoBehaviour
@@ -15,10 +14,6 @@ public class GameManager : MonoBehaviour
     private List<Enemy> enemies;
     private bool enemiesMoving;
     private bool doingSetup = true;
-
-    //SecretMode!
-    public bool secretModeActive = false;
-    private BloomOptimized bloom;
 
     //      Score
     public float time = 0f;
@@ -46,17 +41,6 @@ public class GameManager : MonoBehaviour
     private List<LevelColorData> colors;
     [HideInInspector] public Color32 levelColor;
 
-    //       PlayerStats
-    public TextAsset playerStatsXMLFile;
-
-    private List<PlayerStatsData> playerStats;
-    [HideInInspector] public int foodPoints;
-    [HideInInspector] public int maxFoodPoints;
-     public int coinsCount;
-    [HideInInspector] public int healthPoints;
-    [HideInInspector] public int maxHealthPoints;
-//    private float damageCount;
-
 	// Use this for initialization
 	void Awake ()
 	{
@@ -64,13 +48,10 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             XMLFileHandler.DeserializeXMLFile<LevelColorData>(levelColorXMLFile, out colors);
-            XMLFileHandler.DeserializeXMLFile<PlayerStatsData>(playerStatsXMLFile, out playerStats);
-            LoadDefaultPlayerStats();
+            PlayerStatsManager.instance.LoadPlayerStatsFromXML();
         }
         else if (instance != this)
             Destroy(gameObject);
-
-        SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
 
 		DontDestroyOnLoad (gameObject);
 		enemies = new List<Enemy>();
@@ -89,41 +70,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(generatorScript.BeginGame());
         }
 	}
-
-    void OnDisable()
-    {
-        SecretEventHandler.OnTrigger -= this.SecretEventHandler_OnTrigger;
-    }
-
-    private void SecretEventHandler_OnTrigger()
-    {
-        secretModeActive = !secretModeActive;
-
-        if (secretModeActive)
-            SoundManager.instance.musicSource.clip = SoundManager.instance.secretBGM;
-        else
-            SoundManager.instance.musicSource.clip = SoundManager.instance.mainBGM;
-
-        bloom.enabled = secretModeActive;
-        SoundManager.instance.musicSource.Play();
-    }
-
-    public void LoadDefaultPlayerStats()
-    {
-        for (int i = 0; i < playerStats.Count; i++)
-        {
-            if (playerStats[i].difficulty == difficulty)
-            {
-                foodPoints = playerStats[i].GetFoodPoints();
-                maxFoodPoints = playerStats[i].GetMaxFoodPoints();
-                healthPoints = playerStats[i].GetHealthPoints();
-                maxHealthPoints = playerStats[i].GetMaxHealthPoints();
-                coinsCount = playerStats[i].playerCoinsCount;
-//                damageCount = playerStats[i].GetDamageCount();
-            }
-        }
-    }
-
+    
     void OnLevelWasLoaded()
     {
         if (Application.loadedLevelName == "Classic3D")
@@ -153,12 +100,7 @@ public class GameManager : MonoBehaviour
 		//#if UNITY_IOS || UNITY_IPHONE
 		Application.targetFrameRate = 60;
 		//#endif
-
-        if (Application.loadedLevel != 0)
-        {
-            bloom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BloomOptimized>();
-            bloom.enabled = secretModeActive;
-        }
+        
         levelColor = ColorUtil.ConvertHEXtoRGB(colors[Random.Range(0, colors.Count)].HexString);
 
 		levelText.text = "Level " + level;
@@ -184,7 +126,7 @@ public class GameManager : MonoBehaviour
 		StartCoroutine (MoveEnemies ());
 	}
 
-	public void AddEnemyToList (Enemy script)
+	public void AddEnemyToList(Enemy script)
 	{
 		enemies.Add (script);
 	}
@@ -196,7 +138,7 @@ public class GameManager : MonoBehaviour
 
 	public void GameOver ()
 	{
-        float score = Mathf.RoundToInt((foodPoints * 50 + maxFoodPoints * 100 + healthPoints * 50 + maxHealthPoints * 100 + coinsCount * 100) * level - (Mathf.PI * (time / stepCount)));
+        float score = Mathf.RoundToInt((PlayerStatsManager.instance.FoodPoints * 50 + PlayerStatsManager.instance.MaxFoodPoints * 100 + PlayerStatsManager.instance.HealthPoints * 50 + PlayerStatsManager.instance.MaxHealthPoints * 100 + PlayerStatsManager.instance.CoinCount * 100) * level - Mathf.PI * (time / stepCount));
 		levelText.text = "After " + level + " levels, you died. \n Score: " + score / 1000;
 		levelImage.gameObject.SetActive (true);
 		enabled = false;

@@ -241,7 +241,8 @@ public class Player : MovingObject {
         {
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
             GameManager.instance.stepCount++;
-            GameManager.instance.foodPoints--;
+            //GameManager.instance.foodPoints--;
+            PlayerStatsManager.instance.FoodPoints--;
         }
         CheckIfGameOver();
         GameManager.instance.playersTurn = false;
@@ -261,17 +262,17 @@ public class Player : MovingObject {
     public void LoseFood(int loss)
     {
         //animator.SetTrigger("playerHit");
-        GameManager.instance.foodPoints -= loss;
+        //GameManager.instance.foodPoints -= loss;
+        PlayerStatsManager.instance.FoodPoints -= loss;
         CheckIfGameOver();
     }
 
     private void CheckIfGameOver()
     {
-        if (GameManager.instance.foodPoints <= 0)
-        {
-            SoundManager.instance.PlaySingle(gameOverSound);
-            SoundManager.instance.musicSource.Stop();
-            GameManager.instance.GameOver();
-        }
+        if (PlayerStatsManager.instance.FoodPoints > 0) return;
+        
+        SoundManager.instance.PlaySingle(gameOverSound);
+        SoundManager.instance.musicSource.Stop();
+        GameManager.instance.GameOver();
     }
 }

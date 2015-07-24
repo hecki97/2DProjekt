@@ -1,15 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <ArrayOfLevelColorData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LevelColorData Name="New Color" HexString="00FF00">
     <Name>New Color</Name>
     <HexString>00FF00</HexString>
-  </LevelColorData>
-  <LevelColorData Name="New Color" HexString="FF00FF">
-    <Name>New Color</Name>
-    <HexString>FF00FF</HexString>
-  </LevelColorData>
-  <LevelColorData Name="New Color" HexString="FFFF00">
-    <Name>New Color</Name>
-    <HexString>FFFF00</HexString>
   </LevelColorData>
 </ArrayOfLevelColorData>

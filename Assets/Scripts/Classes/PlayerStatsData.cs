@@ -5,62 +5,44 @@ public class PlayerStatsData {
 
 	//Player Stats
     public Difficulty difficulty = Difficulty.Normal;
-    public int unlocked = 0;
-    public int playerCoinsCount = 0;
-	public int playerFoodPoints = 100;
-    public int playerMaxFoodPoints = 100;
-    public int playerHealthPoints = 3;
-    public int playerMaxHealthPoints = 3;
-	public float playerDamageCount = 1f;
-
-    public float GetDamageCount()
-    {
-        return playerDamageCount;
+    //public int unlocked = 0;
+    protected int coinCount = 0;
+	protected int foodPoints = 100;
+    protected int maxFoodPoints = 100;
+    protected int healthPoints = 3;
+    protected int maxHealthPoints = 3;
+	protected float damageCount = 1f;
+    
+    public PlayerStatsData(int coinCount, int foodPoints, int maxFoodPoints, int healthPoints, int maxHealthPoints) {
+        this.coinCount = coinCount;
+        this.foodPoints = foodPoints;
+        this.maxFoodPoints = maxFoodPoints;
+        this.healthPoints = healthPoints;
+        this.maxHealthPoints = maxHealthPoints;
     }
-
-    public int GetFoodPoints()
-    {
-        return playerFoodPoints;
+    
+    public int CoinCount {
+        get { return coinCount; }
+        set { coinCount = value; }
     }
-
-    public int GetMaxFoodPoints()
-    {
-        return playerMaxFoodPoints;
+    
+    public int FoodPoints {
+        get { return foodPoints; }
+        set { foodPoints = value; }
     }
-
-    public int GetHealthPoints()
-    {
-        return playerHealthPoints;
+    
+    public int MaxFoodPoints {
+        get { return maxFoodPoints; }
+        set { maxFoodPoints = value; }
     }
-
-    public int GetMaxHealthPoints()
-    {
-        return playerMaxHealthPoints;
+    
+    public int HealthPoints {
+        get { return healthPoints; }
+        set { healthPoints = value; }
     }
-
-
-    public void SetCoinsCount(int _int)
-    {
-        playerCoinsCount = _int;
-    }
-
-    public void SetFoodPoints(int _int)
-    {
-        playerFoodPoints = _int;
-    }
-
-    public void SetMaxFoodPoints(int _int)
-    {
-        playerMaxFoodPoints = _int;
-    }
-
-    public void SetHealthPoints(int _int)
-    {
-        playerHealthPoints = _int;
-    }
-
-    public void SetMaxHealthPoints(int _int)
-    {
-        playerMaxHealthPoints = _int;
+    
+    public int MaxHealthPoints {
+        get { return maxHealthPoints; }
+        set { maxHealthPoints = value; }
     }
 }

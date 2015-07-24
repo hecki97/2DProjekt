@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class Stringtable : MonoBehaviour {
 
-    protected List<DungeonNameData> table1 = new List<DungeonNameData>();
-    protected List<DungeonNameData> table2 = new List<DungeonNameData>();
-    protected List<DungeonNameData> table3 = new List<DungeonNameData>();
-    protected List<DungeonNameData> table4 = new List<DungeonNameData>(); 
+    public static List<DungeonNameData> table1 = new List<DungeonNameData>();
+    public static List<DungeonNameData> table2 = new List<DungeonNameData>();
+    public static List<DungeonNameData> table3 = new List<DungeonNameData>();
+    public static List<DungeonNameData> table4 = new List<DungeonNameData>(); 
 
 	// Use this for initialization
 	void Awake () {
@@ -128,7 +128,7 @@ public class Stringtable : MonoBehaviour {
 
         DontDestroyOnLoad(this.gameObject);
 	}
-	
+
     protected string GetRandomString(List<DungeonNameData> table)
     {
         int i = Random.Range(0, table.Count);

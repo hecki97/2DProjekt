@@ -1,19 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityStandardAssets.ImageEffects;
 using UnityEngine.Audio;
 
 public class GUIHandler : MonoBehaviour {
-
-    private BlurOptimized blur;
-
-    // Use this for initialization
-    void Start()
-    {
-        blur = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BlurOptimized>();
-        blur.enabled = (Application.loadedLevel != 0) ? false : true;
-    }
-
+    
     public IEnumerator ButtonSwitchGUIPanel(MenuInstance menu, Animator start, Animator target, float time)
     {
         GameManager.instance.menu = menu;
@@ -24,7 +14,7 @@ public class GUIHandler : MonoBehaviour {
 
     public IEnumerator StartGame(Animator start, int levelIndex)
     {
-        GameManager.instance.LoadDefaultPlayerStats();
+        PlayerStatsManager.instance.LoadPlayerStatsFromXML();
         GameManager.instance.menu = MenuInstance.PauseMenu;
         start.SetTrigger("triggerMenu");
         yield return new WaitForSeconds(.475f);
@@ -34,7 +24,7 @@ public class GUIHandler : MonoBehaviour {
 
     public IEnumerator TriggerPauseScreen(Animator start)
     {
-        blur.enabled = !blur.enabled;
+        FXManager.instance.blur.enabled = !FXManager.instance.blur.enabled;
         start.SetTrigger("triggerMenu");
         GameManager.instance.isPaused = !GameManager.instance.isPaused;
         if (GameManager.instance.isPaused)

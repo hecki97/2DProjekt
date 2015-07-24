@@ -10,7 +10,7 @@ public class RotatorScript : MonoBehaviour {
     {
         SecretEventHandler.OnTrigger += this.SecretEventHandler_OnTrigger;
 
-        if (GameManager.instance.secretModeActive)
+        if (FXManager.instance.bloomIsActive)
             SecretEventHandler_OnTrigger();
     }
 

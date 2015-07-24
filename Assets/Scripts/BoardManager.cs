@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
@@ -134,22 +133,14 @@ public class BoardManager : MonoBehaviour
         wallCount = new Count(columns * 2, Mathf.RoundToInt(columns * Mathf.PI));
         coinCount = new Count(columns, columns * 2);
 
-		//BoardSetup ();
 		InitialiseList ();
-        LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
         BoardSetup();
-        LayoutObjectAtRandom (coinTiles, coinCount.minimum, coinCount.maximum);
+		LayoutObjectAtRandom(wallTiles, wallCount.minimum, wallCount.maximum);
+        LayoutObjectAtRandom(coinTiles, coinCount.minimum, coinCount.maximum);
         LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum);
-		int enemyCount = (int)Mathf.Log (level, 2f);
-		LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
-        Instantiate(exit, cornerPositions[Random.Range(0, cornerPositions.Count)], Quaternion.identity);
-        //Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
+		int enemyCount = (int) Mathf.Log (level, 2f);
+		LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);
+        GameObject go = (GameObject) Instantiate(exit, cornerPositions[Random.Range(0, cornerPositions.Count)], Quaternion.identity);
+		go.transform.SetParent(boardHolder);
 	}
-
-    /*
-    void Start()
-    {
-        SetupScene(0);
-    }
-    */
 }

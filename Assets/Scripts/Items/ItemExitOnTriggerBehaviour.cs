@@ -7,6 +7,7 @@ public class ItemExitOnTriggerBehaviour : MonoBehaviour {
     private Animator shopAnim;
     private ShopGUIController shopGUI;
     private Player player;
+    //public float cooldown;
 
 	// Use this for initialization
 	void Start () {
@@ -22,10 +23,15 @@ public class ItemExitOnTriggerBehaviour : MonoBehaviour {
             shopGUI.SetPlayerStats();
             shopAnim.SetTrigger("triggerMenu");
             GameManager.instance.isPaused = true;
-            player.enabled = false;
+            //player.enabled = false;
         }
     }
-
+    
+    void Update() {
+        //if (!GameManager.instance.isPaused)
+        //    cooldown = (cooldown > 0) ? (cooldown -= 1 * Time.deltaTime) : 0;
+    }
+    
     void Restart()
     {
         GameManager.instance.level++;
